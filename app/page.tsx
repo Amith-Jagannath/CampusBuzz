@@ -1,5 +1,6 @@
 import Image from "next/image";
-
+import Link from "next/link";
+import { SessionProvider } from "next-auth/react";
 export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -12,6 +13,13 @@ export default function Home() {
           height={38}
           priority
         />
+        <div className="md:flex hidden items-center justify-center text-white">
+          <Link href="/api/auth/signin" className="signIn-button ">
+            <div className="pointer p-2 bg-[#afa18f] text-white px-4 whitespace-nowrap">
+              Sign-In
+            </div>
+          </Link>
+        </div>
         <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2 tracking-[-.01em]">
             Get started by editing{" "}
