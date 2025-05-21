@@ -53,11 +53,19 @@ export function CustomPrismaAdapter(p = prisma): Adapter {
       });
     },
     createSession: async (data) => {
+      const account = await p.account.findFirst({
+        where: {
+          userId: data.userId,
+        },
+        orderBy: {
+          updatedAt: "desc", // in case there are multiple accounts (Google, GitHub, etc.)
+        },
+      });
       return await p.session.create({
         data: {
           sessionToken: data.sessionToken,
           expires: data.expires,
-          accessToken: (data as any).accessToken ?? "",
+          accessToken: account?.accessToken ?? "",
           user: {
             connect: {
               id: data.userId, // Connect the existing user by id
