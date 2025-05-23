@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient, User as PrismaUser } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import type { Adapter, AdapterUser } from "next-auth/adapters";
 import type { AdapterAccount } from "next-auth/adapters";
 
@@ -75,6 +75,6 @@ export function CustomPrismaAdapter(p = prisma): Adapter {
       });
     },
 
-    // Override linkAccount to rename 'type' → 'providerType'
+   
   };
 }
