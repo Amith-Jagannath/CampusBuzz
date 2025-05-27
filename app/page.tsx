@@ -4,10 +4,32 @@ import { signIn, signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import Navigation from "./components/Navigation";
 import MainContent from "./components/MainContent";
-import Ads from "./components/Ads";
+import { useState } from "react";
 export default function Home() {
   const { data: session, status } = useSession();
+  const [showModal, setShowModal] = useState(false);
+  const [username, setUsername] = useState("");
+  const colleges = [
+    "NMAM Institute Of Technolgy, Nitte",
+    "MIT Engineering College, Manipal",
+    "Alvas College of Engineering, Moodidri",
+  ];
+  const openModal = async () => {
+    const res = await fetch("/api/gemini", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt:
+          "Please generate a random username for my application user, just return one username without any extra character, since your response will be set as the username",
+      }),
+    });
 
+    const data = await res.json();
+    console.log(data);
+    setUsername(data.result);
+    setShowModal(true);
+  };
+  const closeModal = () => setShowModal(false);
   if (status === "loading") {
     return <div className="text-white p-10">Loading...</div>;
   }
@@ -114,7 +136,7 @@ export default function Home() {
                 Get Started
               </button>
               <button
-                className="border border-purple-400 hover:bg-purple-800 text-purple-300 font-semibold py-2 px-6 rounded-full transition"
+                className="border border-purple-400 hover:bg-purple-800 text-purple-300 font-semibold py-2 px-6 rounded-full transition hover:cursor-pointer"
                 onClick={() => signIn()}
               >
                 Log in
@@ -123,12 +145,110 @@ export default function Home() {
           </section>
         ) : (
           <div className="flex w-full">
-            <Navigation />
+            <aside className="  border-r border-zinc-800 h-screen fixed overflow-y-auto bg-[#1a1a2e]/80 rounded-xl p-4 backdrop-blur-md shadow-lg w-64">
+              {/* <div className="text-3xl font-bold mb-6 text-orange-400">grapevine</div> */}
+              <nav className="space-y-4">
+                <div className="space-y-2">
+                  <button className="flex items-center gap-2 hover:text-orange-400 hover:cursor-pointer">
+                    <span>🏠</span> <span>Home</span>
+                  </button>
+                  <button
+                    className="flex items-center gap-2 hover:text-orange-400 hover:cursor-pointer"
+                    onClick={openModal}
+                  >
+                    <span>🏢</span> <span>Connect with campus</span>
+                  </button>
+                </div>
+
+                <div className="space-y-1 mt-4 text-sm">
+                  <details className="group">
+                    <summary className="cursor-pointer group-hover:text-orange-400">
+                      Careers
+                    </summary>
+                  </details>
+                  <details className="group">
+                    <summary className="cursor-pointer group-hover:text-orange-400">
+                      Sectors
+                    </summary>
+                  </details>
+                  <details className="group">
+                    <summary className="cursor-pointer group-hover:text-orange-400">
+                      What's Happening
+                    </summary>
+                  </details>
+                  <details className="group">
+                    <summary className="cursor-pointer group-hover:text-orange-400">
+                      Interests
+                    </summary>
+                  </details>
+                  <details className="group">
+                    <summary className="cursor-pointer group-hover:text-orange-400">
+                      Cities
+                    </summary>
+                  </details>
+                  <details className="group">
+                    <summary className="cursor-pointer group-hover:text-orange-400">
+                      For everything else
+                    </summary>
+                  </details>
+                </div>
+              </nav>
+            </aside>
             <MainContent />
             {/* <Ads /> */}
           </div>
         )}
       </main>
+      {showModal && (
+        <>
+          {/* Blurred background */}
+          <div
+            className="fixed inset-0  bg-opacity-20 backdrop-blur-sm z-40"
+            onClick={closeModal}
+          ></div>
+
+          {/* Modal box */}
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white text-black rounded-xl p-6 w-full max-w-md shadow-lg">
+              <h2 className="text-xl font-semibold mb-4">Enter Details</h2>
+
+              <label className="block mb-2">Anonymous name</label>
+              <input
+                type="text"
+                className="w-full p-2 border rounded mb-4"
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
+              />
+
+              <label className="block mb-2">Select College</label>
+              <select
+                id="collegeSelect" // Good for accessibility
+                className="w-full p-2 border rounded mb-4"
+              >
+                <option value="">Choose College</option>{" "}
+                {/* Default/placeholder option */}
+                {colleges.map((college, index) => (
+                  <option key={index} value={college}>
+                    {college}
+                  </option>
+                ))}
+              </select>
+
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={closeModal}
+                  className="bg-gray-300 px-4 py-2 rounded hover:cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button className="bg-purple-600 text-white px-4 py-2 rounded hover:cursor-pointer">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

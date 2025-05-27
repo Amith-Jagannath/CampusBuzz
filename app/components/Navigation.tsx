@@ -1,6 +1,11 @@
 import React from "react";
-
+import { useState } from "react";
 const Navigation = () => {
+  const [showModal, setShowModal] = useState(false);
+  
+
+  const openModal = () => setShowModal(true);
+  const closeModal = () => setShowModal(false);
   return (
     <aside className="  border-r border-zinc-800 h-screen fixed overflow-y-auto bg-[#1a1a2e]/80 rounded-xl p-4 backdrop-blur-md shadow-lg w-64">
       {/* <div className="text-3xl font-bold mb-6 text-orange-400">grapevine</div> */}
@@ -10,11 +15,9 @@ const Navigation = () => {
             <span>🏠</span> <span>Home</span>
           </button>
           <button className="flex items-center gap-2 hover:text-orange-400">
-            <span>🏢</span> <span>My Company</span>
+            <span>🏢</span> <span>Connect with campus</span>
           </button>
-          <button className="flex items-center gap-2 hover:text-orange-400">
-            <span>💰</span> <span>Salaries</span>
-          </button>
+          
         </div>
 
         <div className="space-y-1 mt-4 text-sm">
