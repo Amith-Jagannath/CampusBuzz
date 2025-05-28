@@ -20,11 +20,11 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.8.1
+ * Prisma Client JS version: 6.8.2
  * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
  */
 Prisma.prismaVersion = {
-  client: "6.8.1",
+  client: "6.8.2",
   engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
 }
 
@@ -143,6 +143,12 @@ exports.Prisma.SessionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CollegeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  state: 'state'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -150,7 +156,8 @@ exports.Prisma.UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  belongToCampus: 'belongToCampus'
 };
 
 exports.Prisma.VerificationRequestScalarFieldEnum = {
@@ -160,6 +167,21 @@ exports.Prisma.VerificationRequestScalarFieldEnum = {
   expires: 'expires',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PostScalarFieldEnum = {
+  id: 'id',
+  collegeId: 'collegeId',
+  userId: 'userId',
+  postUrl: 'postUrl',
+  description: 'description'
+};
+
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  description: 'description'
 };
 
 exports.Prisma.SortOrder = {
@@ -181,8 +203,11 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   Account: 'Account',
   Session: 'Session',
+  College: 'College',
   User: 'User',
-  VerificationRequest: 'VerificationRequest'
+  VerificationRequest: 'VerificationRequest',
+  Post: 'Post',
+  Comment: 'Comment'
 };
 
 /**

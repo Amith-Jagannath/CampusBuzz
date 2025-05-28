@@ -3,6 +3,7 @@
 import { signIn, signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import Navigation from "./components/Navigation";
+import { useEffect } from "react";
 import MainContent from "./components/MainContent";
 import { useState } from "react";
 export default function Home() {
@@ -33,6 +34,18 @@ export default function Home() {
   if (status === "loading") {
     return <div className="text-white p-10">Loading...</div>;
   }
+  const handleJoinCampus = () => {
+
+  }
+
+  useEffect(() => {
+    first
+  
+    return () => {
+      second
+    }
+  }, [])
+  
 
   return (
     <div className="bg-[#0e0b1f] text-white font-sans min-h-screen">
@@ -241,8 +254,8 @@ export default function Home() {
                 >
                   Cancel
                 </button>
-                <button className="bg-purple-600 text-white px-4 py-2 rounded hover:cursor-pointer">
-                  Submit
+                <button className="bg-purple-600 text-white px-4 py-2 rounded hover:cursor-pointer" onClick={handleJoinCampus}>
+                  Join campus
                 </button>
               </div>
             </div>

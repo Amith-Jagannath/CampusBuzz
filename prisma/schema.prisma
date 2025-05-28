@@ -35,6 +35,13 @@ model Session {
   user         User     @relation(fields: [userId], references: [id])
 }
 
+model College {
+  id      String   @id @default(uuid())
+  name    String
+  state   String
+  posts   Post[]
+  users  User[]  @relation("CollegeToUsers")
+}
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -43,6 +50,8 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  belongToCampus  String?
+  college         College?   @relation("CollegeToUsers", fields: [belongToCampus], references: [id])
   accounts      Account[]
   sessions      Session[]
 }
@@ -57,3 +66,27 @@ model VerificationRequest {
 
   @@unique([identifier, token])
 }
+
+
+
+
+
+model Post {
+  id          String    @id @default(uuid())
+  collegeId   String
+  userId      String
+  postUrl     String?
+  description String
+  comments    Comment[]
+
+  college     College   @relation(fields: [collegeId], references: [id])
+}
+
+model Comment {
+  id          String   @id @default(uuid())
+  postId      String
+  userId      String
+  description String
+  post        Post     @relation(fields: [postId], references: [id])
+}
+
