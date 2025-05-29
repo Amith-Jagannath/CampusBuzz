@@ -2,19 +2,22 @@
 
 import { signIn, signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import Navigation from "./components/Navigation";
 import { useEffect } from "react";
 import MainContent from "./components/MainContent";
 import { useState } from "react";
+import { getColleges } from "./libs/server";
 export default function Home() {
   const { data: session, status } = useSession();
   const [showModal, setShowModal] = useState(false);
   const [username, setUsername] = useState("");
-  const colleges = [
-    "NMAM Institute Of Technolgy, Nitte",
-    "MIT Engineering College, Manipal",
-    "Alvas College of Engineering, Moodidri",
-  ];
+  const [college, setCollege] = useState("");
+  const [colleges, setColleges] = useState<string[]>([]);
+  console.log("Session:", session);
+  // const colleges = [
+  //   "NMAM Institute Of Technolgy, Nitte",
+  //   "MIT Engineering College, Manipal",
+  //   "Alvas College of Engineering, Moodidri",
+  // ];
   const openModal = async () => {
     const res = await fetch("/api/gemini", {
       method: "POST",
@@ -31,22 +34,24 @@ export default function Home() {
     setShowModal(true);
   };
   const closeModal = () => setShowModal(false);
+
+  const handleJoinCampus = () => {
+    // const res = await addUserToCampus()
+    console.log(username, college);
+  };
+
+  useEffect(() => {
+    const fetchColleges = async () => {
+      const res = await getColleges();
+      setColleges(res.map((college) => college.name));
+      console.log("college:", res);
+    };
+
+    fetchColleges();
+  }, []);
   if (status === "loading") {
     return <div className="text-white p-10">Loading...</div>;
   }
-  const handleJoinCampus = () => {
-
-  }
-
-  useEffect(() => {
-    first
-  
-    return () => {
-      second
-    }
-  }, [])
-  
-
   return (
     <div className="bg-[#0e0b1f] text-white font-sans min-h-screen">
       {/* Fixed Top Header */}
@@ -237,6 +242,7 @@ export default function Home() {
               <select
                 id="collegeSelect" // Good for accessibility
                 className="w-full p-2 border rounded mb-4"
+                onChange={(e) => setCollege(e.target.value)}
               >
                 <option value="">Choose College</option>{" "}
                 {/* Default/placeholder option */}
@@ -254,7 +260,10 @@ export default function Home() {
                 >
                   Cancel
                 </button>
-                <button className="bg-purple-600 text-white px-4 py-2 rounded hover:cursor-pointer" onClick={handleJoinCampus}>
+                <button
+                  className="bg-purple-600 text-white px-4 py-2 rounded hover:cursor-pointer"
+                  onClick={handleJoinCampus}
+                >
                   Join campus
                 </button>
               </div>
