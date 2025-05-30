@@ -37,7 +37,7 @@ model Session {
 
 model College {
   id    String @id @default(uuid())
-  name  String
+  name  String @unique
   state String
   posts Post[]
   users User[] @relation("CollegeToUsers")

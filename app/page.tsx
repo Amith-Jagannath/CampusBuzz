@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import MainContent from "./components/MainContent";
 import { useState } from "react";
 import { getColleges } from "./libs/server";
+import { addUserToCampus } from "./libs/server";
 export default function Home() {
   const { data: session, status } = useSession();
   const [showModal, setShowModal] = useState(false);
@@ -35,9 +36,10 @@ export default function Home() {
   };
   const closeModal = () => setShowModal(false);
 
-  const handleJoinCampus = () => {
-    // const res = await addUserToCampus()
+  const handleJoinCampus = async() => {
+    const res = await addUserToCampus(college, username, session?.user.id);
     console.log(username, college);
+
   };
 
   useEffect(() => {

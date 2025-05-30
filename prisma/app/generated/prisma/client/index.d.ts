@@ -9473,14 +9473,14 @@ export namespace Prisma {
 
   export type CollegeWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    name?: string
     AND?: CollegeWhereInput | CollegeWhereInput[]
     OR?: CollegeWhereInput[]
     NOT?: CollegeWhereInput | CollegeWhereInput[]
-    name?: StringFilter<"College"> | string
     state?: StringFilter<"College"> | string
     posts?: PostListRelationFilter
     users?: UserListRelationFilter
-  }, "id">
+  }, "id" | "name">
 
   export type CollegeOrderByWithAggregationInput = {
     id?: SortOrder

@@ -19,7 +19,14 @@ const authOptions: AuthOptions = {
     strategy: "database", // <-- change this
   },
   callbacks: {
-    
+      async session({ session, user }) {
+    if (session.user && user) {
+      console.log("user:",user)
+      console.log("session:",session)
+      session.user.id = user.id;
+    }
+    return session;
+  },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
