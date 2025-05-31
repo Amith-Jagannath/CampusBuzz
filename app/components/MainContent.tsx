@@ -1,17 +1,9 @@
 import React from "react";
-
+import CreatePostCard from "./CreatePost";
 const MainContent = () => {
   return (
     <main className="flex-1 ml-64 mr-80 p-6  space-y-6 h-screen">
-      <div className="bg-zinc-800 rounded-xl p-6 text-center">
-        <p className="text-sm text-gray-400 mb-2">11:38 AM</p>
-        <h2 className="text-xl font-semibold">Ask Anything...</h2>
-        <input
-          type="text"
-          placeholder="Create a post..."
-          className="mt-4 w-full p-3 rounded bg-zinc-700 text-white placeholder-gray-400 focus:outline-none"
-        />
-      </div>
+      <CreatePostCard />
 
       <div className="space-y-4">
         <div className="bg-zinc-900 p-4 rounded-lg border border-zinc-700">

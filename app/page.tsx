@@ -14,11 +14,6 @@ export default function Home() {
   const [college, setCollege] = useState("");
   const [colleges, setColleges] = useState<string[]>([]);
   console.log("Session:", session);
-  // const colleges = [
-  //   "NMAM Institute Of Technolgy, Nitte",
-  //   "MIT Engineering College, Manipal",
-  //   "Alvas College of Engineering, Moodidri",
-  // ];
   const openModal = async () => {
     const res = await fetch("/api/gemini", {
       method: "POST",
@@ -36,17 +31,22 @@ export default function Home() {
   };
   const closeModal = () => setShowModal(false);
 
-  const handleJoinCampus = async() => {
+  const handleJoinCampus = async () => {
+    if (college == "") {
+      alert("Please select a college");
+      return;
+    }
     const res = await addUserToCampus(college, username, session?.user.id);
     console.log(username, college);
-
   };
 
   useEffect(() => {
     const fetchColleges = async () => {
       const res = await getColleges();
+
       setColleges(res.map((college) => college.name));
       console.log("college:", res);
+      closeModal();
     };
 
     fetchColleges();

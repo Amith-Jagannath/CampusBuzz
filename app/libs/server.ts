@@ -16,6 +16,7 @@ export async function addUserToCampus(
   username: string,
   userId: string | undefined
 ) {
+  console.log(collegeName);
   const collegeId = await prisma.college.findUnique({
     where: { name: collegeName },
     select: { id: true },
@@ -32,4 +33,5 @@ export async function addUserToCampus(
       username: username,
     },
   });
+  console.log("User updated:", res);
 }
