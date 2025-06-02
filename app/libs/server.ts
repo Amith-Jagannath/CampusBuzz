@@ -35,3 +35,14 @@ export async function addUserToCampus(
   });
   console.log("User updated:", res);
 }
+
+export async function Belongstocampus(userId: string | undefined) {
+  if (!userId) return false;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { belongToCampus: true },
+  });
+
+  return user?.belongToCampus ;
+}
