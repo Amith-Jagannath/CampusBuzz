@@ -175,14 +175,16 @@ exports.Prisma.PostScalarFieldEnum = {
   collegeId: 'collegeId',
   userId: 'userId',
   postUrl: 'postUrl',
-  description: 'description'
+  description: 'description',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.CommentScalarFieldEnum = {
   id: 'id',
   postId: 'postId',
   userId: 'userId',
-  description: 'description'
+  description: 'description',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {

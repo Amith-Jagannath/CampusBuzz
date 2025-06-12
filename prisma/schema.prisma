@@ -55,6 +55,8 @@ model User {
   college         College?   @relation("CollegeToUsers", fields: [belongToCampus], references: [id])
   accounts      Account[]
   sessions      Session[]
+  comments    Comment[]
+  posts           Post[]
 }
 
 model VerificationRequest {
@@ -78,8 +80,9 @@ model Post {
   userId      String
   postUrl     String?
   description String
+  createdAt   DateTime  @default(now())
   comments    Comment[]
-
+  user        User      @relation(fields: [userId], references: [id])
   college     College   @relation(fields: [collegeId], references: [id])
 }
 
@@ -88,6 +91,8 @@ model Comment {
   postId      String
   userId      String
   description String
+  createdAt   DateTime  @default(now())
   post        Post     @relation(fields: [postId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
 }
 

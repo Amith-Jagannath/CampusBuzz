@@ -44,5 +44,61 @@ export async function Belongstocampus(userId: string | undefined) {
     select: { belongToCampus: true },
   });
 
-  return user?.belongToCampus ;
+  return user?.belongToCampus;
+}
+
+export async function getCollegeIdByUserId(userId: string | undefined) {
+  if (!userId) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { belongToCampus: true },
+  });
+  console.log("User's college ID:", user?.belongToCampus);
+  return user?.belongToCampus || null;
+}
+export async function createPost(
+  userId: string | undefined,
+  description: string,
+  postUrl: string | null,
+  collegeId: string | null
+) {
+  if (!userId || !collegeId) return;
+
+  const post = await prisma.post.create({
+    data: {
+      description,
+      postUrl,
+      user: { connect: { id: userId } },
+      college: { connect: { id: collegeId } },
+    },
+  });
+
+  return post;
+}
+
+export async function getPostsByCollegeId(collegeId: string | null) {
+  if (!collegeId) return [];
+  
+
+  const posts = await prisma.post.findMany({
+    where: { collegeId },
+    include: {
+      user: {
+        select: { username: true, image: true },
+      },
+      comments: {
+        include: {
+          user: {
+            select: { username: true, image: true },
+          },
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return posts;
 }

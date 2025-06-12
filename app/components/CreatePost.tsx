@@ -1,9 +1,12 @@
 import { useState } from "react";
-
+import { useSession } from "next-auth/react";
+import { getCollegeIdByUserId } from "../libs/server";
+import { createPost } from "../libs/server";
 export default function CreatePostCard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [description, setDescription] = useState("");
+  const { data: session } = useSession();
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
@@ -12,9 +15,17 @@ export default function CreatePostCard() {
     }
   };
 
-  const handlePost = () => {
+  const handlePost = async () => {
     // Your post logic here
     console.log("Posting:", { description, image });
+
+    const collegeId = await getCollegeIdByUserId(session?.user.id);
+    const res = await createPost(
+      session?.user.id,
+      description,
+      image,
+      collegeId
+    );
     setIsModalOpen(false);
     setDescription("");
     setImage(null);
