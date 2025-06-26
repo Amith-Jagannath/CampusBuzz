@@ -8,8 +8,9 @@ const Navigation = () => {
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
   return (
-    <div className="flex w-full">
-            <aside className="  border-r border-zinc-800 h-screen fixed overflow-y-auto bg-[#1a1a2e]/80 rounded-xl p-4 backdrop-blur-md shadow-lg w-64">
+    <div className="flex w-full ">
+           <aside className="hidden md:block border-r border-zinc-800 h-screen fixed overflow-y-auto bg-[#1a1a2e]/80 rounded-xl p-4 backdrop-blur-md shadow-lg w-64">
+
               {/* <div className="text-3xl font-bold mb-6 text-orange-400">grapevine</div> */}
               <nav className="space-y-4">
                 <div className="space-y-2">

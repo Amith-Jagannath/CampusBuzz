@@ -1,3 +1,4 @@
+'use client';
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { getCollegeIdByUserId } from "../libs/server";
@@ -5,6 +6,8 @@ import { createPost } from "../libs/server";
 export default function CreatePostCard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const [description, setDescription] = useState("");
   const { data: session } = useSession();
 
@@ -12,18 +15,45 @@ export default function CreatePostCard() {
     const file = e.target.files[0];
     if (file) {
       setImage(URL.createObjectURL(file));
+      setImageFile(file);
     }
   };
-
+  const convertToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // reads file as base64 string
+      reader.onload = () => resolve(reader.result as string); // when done, return base64
+      reader.onerror = (error) => reject(error); // handle error
+    });
   const handlePost = async () => {
     // Your post logic here
-    console.log("Posting:", { description, image });
+    console.log("submittting post");
+    let imageUrl;
+    if (imageFile) {
+      const base64 = await convertToBase64(imageFile);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64 }),
+      });
+
+      const data = await res.json();
+      imageUrl = data.uploadResult.autoCropUrl;
+;     console.log(imageUrl)
+      console.log(data);
+      // if (!imageUrl) {
+      //   console.error("Failed to upload image");
+      //   return;
+      // }
+    }
+    console.log("Posting:", { description, });
 
     const collegeId = await getCollegeIdByUserId(session?.user.id);
     const res = await createPost(
       session?.user.id,
       description,
-      image,
+      imageUrl,
       collegeId
     );
     setIsModalOpen(false);
