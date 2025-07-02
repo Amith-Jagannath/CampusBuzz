@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // other Next.js config...
 };
+module.exports = {
+  images: {
+    domains: ["lh3.googleusercontent.com", "res.cloudinary.com"],
+  },
+};
 
 export default withPWA({
   dest: "public",

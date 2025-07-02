@@ -1,196 +1,363 @@
 import React, { useEffect, useState } from "react";
 import CreatePostCard from "./CreatePost";
 import { useSession } from "next-auth/react";
-import { getCollegeIdByUserId } from "../libs/server";
-import { getPostsByCollegeId } from "../libs/server"; // Assuming this function exists to fetch posts
+import Image from "next/image";
+import { getCollegeIdByUserId, getPostsByCollegeId } from "../libs/server"; // Assuming these are server-side functions
+
+// Define the Post type for better type safety
+type Post = {
+  id: string;
+  description: string;
+  postUrl: string | null;
+  createdAt: Date;
+  collegeId: string;
+  userId: string;
+  user: {
+    username: string;
+    image: string;
+  };
+  comments: {
+    id: string;
+    postId: string;
+    userId: string;
+    description: string;
+    // Assuming comment also has a user, or we'll display "Anonymous"
+    user?: {
+      username: string;
+    };
+  }[];
+};
+
 const CampusMainPage = () => {
   const { data: session } = useSession();
-  const [expandedPosts, setExpandedPosts] = useState<{
-    [key: number]: boolean;
-  }>({});
-  const [showCommentBox, setShowCommentBox] = useState<{
-    [key: number]: boolean;
-  }>({});
-  const [newComments, setNewComments] = useState<{ [key: number]: string }>({});
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [expandedPosts, setExpandedPosts] = useState<Record<string, boolean>>(
+    {}
+  );
+  const [showCommentBox, setShowCommentBox] = useState<Record<string, boolean>>(
+    {}
+  );
+  const [newComments, setNewComments] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const toggleComments = (postId: number) => {
+  // Toggle visibility of all comments for a post
+  const toggleComments = (postId: string) => {
     setExpandedPosts((prev) => ({
       ...prev,
       [postId]: !prev[postId],
     }));
   };
 
-  const toggleCommentBox = (postId: number) => {
+  // Toggle visibility of the comment input box
+  const toggleCommentBox = (postId: string) => {
     setShowCommentBox((prev) => ({
       ...prev,
       [postId]: !prev[postId],
     }));
   };
 
-  const handleCommentChange = (postId: number, value: string) => {
+  // Handle changes in the comment input
+  const handleCommentChange = (postId: string, value: string) => {
     setNewComments((prev) => ({
       ...prev,
       [postId]: value,
     }));
   };
 
-  const handleAddComment = (postId: number) => {
+  // Add a new comment to a post
+  const handleAddComment = (postId: string) => {
     const commentText = newComments[postId]?.trim();
     if (!commentText) return;
 
-    // You can replace this with a backend call later
-    const commenter = "You"; // Replace with actual username
-
-    posts = posts.map((post) =>
-      post.id === postId
-        ? {
-            ...post,
-            comments: [...post.comments, { commenter, text: commentText }],
-          }
-        : post
+    // Optimistically update the UI
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId
+          ? {
+              ...post,
+              comments: [
+                ...post.comments,
+                {
+                  id: crypto.randomUUID(), // Unique ID for the new comment
+                  postId,
+                  userId: session?.user?.id ?? "unknown",
+                  description: commentText,
+                  user: {
+                    username: session?.user?.name ?? "Anonymous", // Use session username or Anonymous
+                  },
+                },
+              ],
+            }
+          : post
+      )
     );
 
-    // Clear input and hide input box
+    // Clear the comment input and hide the comment box
     setNewComments((prev) => ({ ...prev, [postId]: "" }));
     setShowCommentBox((prev) => ({ ...prev, [postId]: false }));
+
+    // TODO: In a real application, you would send this comment to your backend
+    // For example: await createComment({ postId, userId: session.user.id, description: commentText });
   };
+
+  // Fetch posts when the session changes or component mounts
   useEffect(() => {
     const getAllPosts = async () => {
-      console.log("Session", session?.user.id);
-      const collegeId = await getCollegeIdByUserId(session?.user.id);
-      console.log("CollegeId", collegeId);
-      const posts = await getPostsByCollegeId(collegeId);
-      console.log(posts);
-    };
-    getAllPosts();
-  }, []);
+      if (!session?.user?.id) {
+        setLoading(false);
+        return;
+      }
 
-  // Posts stored in memory (can later be refactored to state/db)
-  let posts = [
-    {
-      id: 1,
-      username: "Aarav Mehta",
-      userImage: "https://randomuser.me/api/portraits/men/75.jpg",
-      description: "Exploring the mountains this weekend! 🏔️❄️",
-      image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
-      comments: [
-        { commenter: "Neha Sharma", text: "Wow! This looks amazing 🌟" },
-        { commenter: "Rohan Singh", text: "Take me with you next time 😄" },
-        { commenter: "Kriti Rao", text: "Absolutely stunning!" },
-      ],
-    },
-    {
-      id: 2,
-      username: "Isha Verma",
-      userImage: "https://randomuser.me/api/portraits/women/65.jpg",
-      description: "Finally completed my assignment. Time for a nap 😴",
-      image: null,
-      comments: [
-        { commenter: "Aman Joshi", text: "Same here 😅" },
-        { commenter: "Priya Yadav", text: "Assignment gang unite! 😎" },
-      ],
-    },
-  ];
+      setLoading(true);
+      setError(null);
+      try {
+        const collegeId = await getCollegeIdByUserId(session.user.id);
+        if (!collegeId) {
+          setError("Could not retrieve college ID.");
+          setLoading(false);
+          return;
+        }
+
+        const rawPosts = await getPostsByCollegeId(collegeId);
+
+        // Map raw post data to the Post type, ensuring fallbacks
+        const posts: Post[] = rawPosts.map((post: any) => ({
+          id: post.id,
+          description: post.description,
+          postUrl: post.postUrl ?? null,
+          createdAt: new Date(post.createdAt),
+          collegeId: post.collegeId,
+          userId: post.userId,
+          user: {
+            username: post.user?.username?.trim() ?? "Anonymous",
+            image: post.user?.image ?? "/default-avatar.png", // Fallback avatar
+          },
+          comments: post.comments.map((comment: any) => ({
+            id: comment.id,
+            postId: comment.postId,
+            userId: comment.userId,
+            description: comment.description,
+            user: {
+              username: comment.user?.username?.trim() ?? "Anonymous", // Assume comment also has a user
+            },
+          })),
+        }));
+        setPosts(
+          posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+        ); // Sort by newest first
+      } catch (err) {
+        console.error("Failed to fetch posts:", err);
+        setError("Failed to load posts. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getAllPosts();
+  }, [session]); // Dependency array includes session to refetch if session changes
+
+  if (loading) {
+    return (
+      <main className="flex-1 lg:ml-64 lg:mr-80 p-4 md:p-6 space-y-6 h-screen overflow-y-auto flex justify-center items-center">
+        <div className="text-xl text-gray-400">Loading campus feed...</div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="flex-1 lg:ml-64 lg:mr-80 p-4 md:p-6 space-y-6 h-screen overflow-y-auto flex justify-center items-center">
+        <div className="text-xl text-red-500">{error}</div>
+      </main>
+    );
+  }
 
   return (
-    <main className="flex-1 ml-64 mr-80 p-6 space-y-6 h-screen overflow-y-auto">
+    <main className="flex-1 lg:ml-64 lg:mr-80 p-4 md:p-6 space-y-6 min-h-screen bg-black text-white font-sans">
+      {/* Create Post Card */}
+
       <CreatePostCard />
+      <div className="flex space-x-6 border-b border-gray-700 mb-6 text-sm font-medium">
+        
+          <button
+          
+            onClick={() => {}}
+            className="m-2.5text-gray-400 hover:text-white pb-2 border-b-2 border-transparent hover:border-purple-500 transition-all"
+          >
+            Home
+          </button>
+          <button
+            
+            onClick={() => {}}
+            className="text-gray-400 hover:text-white pb-2 border-b-2 border-transparent hover:border-purple-500 transition-all"
+          >
+            Campus chat
+          </button>
+        
+      </div>
 
-      <div className="space-y-6 pb-6">
-        {posts.map((post) => {
-          const isExpanded = expandedPosts[post.id];
-          const isCommenting = showCommentBox[post.id];
-          const visibleComments = isExpanded
-            ? post.comments
-            : post.comments.slice(0, 2);
-          const hasMoreComments = post.comments.length > 2;
+      {/* Posts Feed */}
+      <section className="space-y-6 pb-6">
+        {posts.length === 0 ? (
+          <div className="text-center text-gray-400 py-10">
+            No posts yet! Be the first to share something with your campus.
+          </div>
+        ) : (
+          posts.map((post) => {
+            const isExpanded = expandedPosts[post.id];
+            const isCommenting = showCommentBox[post.id];
+            // Show up to 2 comments initially, then all if expanded
+            const visibleComments = isExpanded
+              ? post.comments
+              : post.comments.slice(0, 2);
+            const hasMoreComments = post.comments.length > 2;
 
-          return (
-            <div
-              key={post.id}
-              className="bg-zinc-800 p-4 rounded-lg shadow-md text-white"
-            >
-              {/* User Info */}
-              <div className="flex items-center mb-3">
-                <img
-                  src={post.userImage}
-                  alt={`${post.username} profile`}
-                  className="w-10 h-10 rounded-full mr-3"
-                />
-                <span className="font-semibold">{post.username}</span>
-              </div>
-
-              {/* Post Description */}
-              <p className="mb-2">{post.description}</p>
-
-              {/* Post Image */}
-              {post.image && (
-                <img
-                  src={post.image}
-                  alt="Post"
-                  className="w-3/4 rounded-lg mt-2 object-cover"
-                />
-              )}
-
-              {/* Like & Comment Buttons */}
-              <div className="flex gap-4 mt-4 text-sm text-gray-300">
-                <button className="hover:text-white transition">❤️ Like</button>
-                <button
-                  className="hover:text-white transition"
-                  onClick={() => toggleCommentBox(post.id)}
-                >
-                  💬 Comment
-                </button>
-              </div>
-
-              {/* Comment Input */}
-              {isCommenting && (
-                <div className="mt-3 flex gap-2 items-center">
-                  <input
-                    type="text"
-                    placeholder="Write a comment..."
-                    className="flex-1 p-2 rounded bg-zinc-700 text-white placeholder-gray-400"
-                    value={newComments[post.id] || ""}
-                    onChange={(e) =>
-                      handleCommentChange(post.id, e.target.value)
-                    }
+            return (
+              <div
+                key={post.id}
+                className="bg-black p-4 sm:p-6 rounded-xl shadow-lg border border-gray-900  transition-all duration-300 ease-in-out"
+              >
+                {/* User Info */}
+                <div className="flex items-center mb-4">
+                  <Image
+                    src={post.user.image}
+                    alt={`${post.user.username}'s avatar`}
+                    className="w-12 h-12 rounded-full mr-4 object-cover border-2 border-purple-500"
+                    width={48}
+                    height={48}
                   />
+                  <div>
+                    <span className="font-bold text-lg text-white">
+                      {post.user.username.trim()}
+                    </span>
+                    <p className="text-sm text-gray-400">
+                      {new Date(post.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Post Description */}
+                <p className="mb-4 text-gray-200 leading-relaxed">
+                  {post.description}
+                </p>
+
+                {/* Post Image */}
+                {post.postUrl && (
+                  <div className="mb-4">
+                    <Image
+                      src={post.postUrl}
+                      alt="Post image"
+                      width={150} // Increased width for better display
+                      height={100} // Increased height for better display
+                      className="rounded-lg max-h-96 w-full object-cover shadow-md"
+                    />
+                  </div>
+                )}
+
+                {/* Interaction Buttons (Like & Comment) */}
+                <div className="flex items-center gap-6 mt-4 pt-4">
+                  <button className="flex items-center text-gray-400 hover:text-purple-400 transition-colors duration-200 text-base font-medium">
+                    <span className="mr-2 text-xl">❤️</span> Like
+                  </button>
                   <button
-                    onClick={() => handleAddComment(post.id)}
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded hover:cursor-pointer"
+                    className="flex items-center text-gray-400 hover:text-purple-400 transition-colors duration-200 text-base font-medium"
+                    onClick={() => toggleCommentBox(post.id)}
                   >
-                    Post
+                    <span className="mr-2 text-xl">💬</span> Comment
                   </button>
                 </div>
-              )}
 
-              {/* Comments Section */}
-              <div className="mt-4 space-y-2">
-                {visibleComments.map((comment, idx) => (
-                  <div key={idx} className="text-sm text-gray-300">
-                    <span className="font-semibold text-white">
-                      {comment.commenter}:{" "}
-                    </span>
-                    {comment.text}
+                {/* Comment Input */}
+                {isCommenting && (
+                  <div className="mt-5 flex flex-col sm:flex-row gap-3 items-center">
+                    <input
+                      type="text"
+                      placeholder="Write a comment..."
+                      className="flex-1 p-3 rounded-lg bg-black text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      value={newComments[post.id] || ""}
+                      onChange={(e) =>
+                        handleCommentChange(post.id, e.target.value)
+                      }
+                    />
+                    <button
+                      onClick={() => handleAddComment(post.id)}
+                      className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg font-semibold shadow-md transition-colors duration-200 w-full sm:w-auto"
+                    >
+                      Post
+                    </button>
                   </div>
-                ))}
-
-                {/* Read More / Show Less */}
-                {hasMoreComments && (
-                  <button
-                    onClick={() => toggleComments(post.id)}
-                    className="text-blue-400 hover:underline text-sm mt-1"
-                  >
-                    {isExpanded
-                      ? "Show less"
-                      : `Read more (${post.comments.length - 2} more)`}
-                  </button>
                 )}
+
+                {/* Comments Section */}
+                <div className="mt-6 space-y-3">
+                  {visibleComments.length === 0 ? (
+                    isCommenting ? null : ( // Don't show "No comments" if comment box is open
+                      <p className="text-gray-500 text-sm italic">
+                        No comments yet. Be the first to comment!
+                      </p>
+                    )
+                  ) : (
+                    visibleComments.map((comment) => (
+                      <div
+                        key={comment.id}
+                        className="text-sm text-gray-300 bg-black p-1 rounded-lg flex items-start gap-3"
+                      >
+                        {/* Assuming comment has a user object with image/username */}
+                        <Image
+                          src="/default-avatar.png" // Replace with actual comment user image if available
+                          alt="Commenter Avatar"
+                          className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                          width={32}
+                          height={32}
+                        />
+                        <div>
+                          <p className="font-semibold text-white">
+                            {comment.user?.username?.trim() ?? "Anonymous"}
+                          </p>
+                          <p>{comment.description}</p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+
+                  {/* "Read More" / "Show Less" for comments */}
+                  {hasMoreComments && (
+                    <button
+                      onClick={() => toggleComments(post.id)}
+                      className="text-purple-400 hover:text-purple-300 font-medium text-sm mt-3 inline-flex items-center"
+                    >
+                      {isExpanded
+                        ? "Show less comments"
+                        : `View all ${post.comments.length} comments`}
+                      <svg
+                        className={`ml-1 w-4 h-4 transition-transform duration-200 ${
+                          isExpanded ? "rotate-180" : ""
+                        }`}
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })
+        )}
+      </section>
     </main>
   );
 };

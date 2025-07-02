@@ -11,17 +11,17 @@ cloudinary.config({
 export async function POST(req: NextRequest) {
   try {
     const { image } = await req.json(); // expects image to be a URL or base64
-
+    const uniqueId = `post_${Date.now()}`;
     const uploadResult = await cloudinary.uploader.upload(image, {
-      public_id: "posts2", // or generate unique IDs
+      public_id: uniqueId,
     });
 
-    const optimizeUrl = cloudinary.url("posts2", {
+    const optimizeUrl = cloudinary.url(uniqueId, {
       fetch_format: "auto",
       quality: "auto",
     });
 
-    const autoCropUrl = cloudinary.url("posts2", {
+    const autoCropUrl = cloudinary.url(uniqueId, {
       crop: "auto",
       gravity: "auto",
       width: 500,

@@ -19,14 +19,20 @@ const authOptions: AuthOptions = {
     strategy: "database", // <-- change this
   },
   callbacks: {
-      async session({ session, user }) {
-    if (session.user && user) {
-      console.log("user:",user)
+    async session({ session }) {
+      if (session.user?.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: session.user.email },
+        });
+
+        if (dbUser) {
+          session.user.id = dbUser.id;
+        }
+      }
       console.log("session:",session)
-      session.user.id = user.id;
-    }
-    return session;
-  },
+
+      return session;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
