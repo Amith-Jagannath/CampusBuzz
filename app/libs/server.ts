@@ -102,3 +102,22 @@ export async function getPostsByCollegeId(collegeId: string | null) {
 
   return posts;
 }
+
+
+export async function AddCommentToPost(
+  postId: string,
+  userId: string | undefined,
+  description: string
+) {
+  if (!userId || !postId || !description) return;
+
+  const newComment = await prisma.comment.create({
+    data: {
+      description,
+      post: { connect: { id: postId } },
+      user: { connect: { id: userId } },
+    },
+  });
+
+  return newComment;
+}

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { getCollegeIdByUserId, createPost } from '../libs/server';
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { getCollegeIdByUserId, createPost } from "../libs/server";
 
 export default function CreatePostCard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
   const { data: session } = useSession();
 
   const handleImageChange = (e: any) => {
@@ -31,9 +31,9 @@ export default function CreatePostCard() {
     let imageUrl;
     if (imageFile) {
       const base64 = await convertToBase64(imageFile);
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: base64 }),
       });
       const data = await res.json();
@@ -45,7 +45,7 @@ export default function CreatePostCard() {
     await createPost(session?.user.id, description, imageUrl, collegeId);
 
     setIsModalOpen(false);
-    setDescription('');
+    setDescription("");
     setImage(null);
   };
 
@@ -83,7 +83,9 @@ export default function CreatePostCard() {
               rows={2}
             />
 
-            <p className="text-sm text-gray-500 mb-4">Add more details... (optional)</p>
+            <p className="text-sm text-gray-500 mb-4">
+              Add more details... (optional)
+            </p>
 
             <div className="border-t border-zinc-800 pt-4 flex flex-wrap justify-between items-center">
               <div className="flex gap-4 text-gray-400 text-xl">
@@ -97,15 +99,15 @@ export default function CreatePostCard() {
                     className="hidden"
                   />
                 </label>
-                <span>🎬</span>
+                {/* <span>🎬</span>
                 <span>🔗</span>
                 <span>📋</span>
-                <span>😊</span>
+                <span>😊</span> */}
               </div>
 
               <button
                 onClick={handlePost}
-                className="bg-gray-700 text-white px-4 py-2 rounded-lg text-sm opacity-70 cursor-not-allowed"
+                className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm opacity-70 cursor-not-allowed"
               >
                 Next
               </button>

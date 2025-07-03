@@ -202,8 +202,8 @@ const MainContent = ({ InsideCampus }: MainContentProps) => {
               </nav>
             </aside> */}
 
-          
-            {InsideCampus ? <CampusMainPage /> : <Home />}
+           <CampusMainPage />
+            {/* {InsideCampus ? <CampusMainPage /> : <Home />} */}
           </div>
         
         )}
