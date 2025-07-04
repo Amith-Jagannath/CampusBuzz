@@ -7,8 +7,9 @@ import { useEffect } from "react";
 import { addUserToCampus, getColleges } from "../libs/server";
 import { useRouter } from "next/navigation";
 import Home from "./Home";
-import CampusMainPage from "./CampusMainPage";
+import CampusMainPage from "./LoggedInPage";
 import { Belongstocampus } from "../libs/server";
+import LoggedInPage from "./LoggedInPage";
 // import MainContent from './MainContent'
 type MainContentProps = {
   InsideCampus: boolean;
@@ -202,7 +203,7 @@ const MainContent = ({ InsideCampus }: MainContentProps) => {
               </nav>
             </aside> */}
 
-           <CampusMainPage />
+           <LoggedInPage />
             {/* {InsideCampus ? <CampusMainPage /> : <Home />} */}
           </div>
         
