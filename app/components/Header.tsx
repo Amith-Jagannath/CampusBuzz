@@ -1,20 +1,58 @@
 import React, { useState } from "react";
-import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
+import { signOut, useSession} from "next-auth/react";
 
+import Image from "next/image";
+import { EditUserBio } from "../libs/server";
 const Header = () => {
   const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [image, setImage] = useState<string | null>();
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [username, setUsername] = useState("");
   const OpenEditModal = () => {
     setIsOpen(false);
+    setImage(session?.user?.image || null);
     setShowEditModal(true);
+    setUsername(session?.user.username || "");
   };
   const CloseEditModal = () => {
     setShowEditModal(false);
   };
+  const handleEditPost = async () => {
+    let imageUrl;
+    if (imageFile) {
+      const base64 = await convertToBase64(imageFile);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64 }),
+      });
+      const data = await res.json();
+      imageUrl = data.autoCropUrl;
+      if (!imageUrl) return;
+    }
+    // console.log("Image URL:", imageUrl);
+    const res = await EditUserBio(session?.user.id, username, imageUrl);
+    setUsername(username);
+    setImage(imageUrl);
+    setShowEditModal(false);
+  };
+  const handleImageChange = (e: any) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(URL.createObjectURL(file));
+      setImageFile(file);
+    }
+  };
 
+  const convertToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
   return (
     <>
       <header className="fixed top-0 left-0 right-0 bg-[#0e0b1f] z-50 border-b border-zinc-800">
@@ -123,7 +161,7 @@ const Header = () => {
           <div className="bg-[#121212] w-full max-w-2xl rounded-2xl p-6 relative">
             <button
               className="absolute top-3 right-4 text-gray-400 text-2xl hover:text-white"
-              onClick={() => CloseEditModal}
+              onClick={CloseEditModal}
             >
               &times;
             </button>
@@ -135,12 +173,9 @@ const Header = () => {
             <input
               className="w-full bg-transparent text-white placeholder-gray-500 text-lg font-medium outline-none resize-none mb-2"
               placeholder="What would you name yourself"
-
-              // onChange={(e) => setDescription(e.target.value)}
-              // rows={2}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
-
-  
 
             <div className="border-t border-zinc-800 pt-4 flex flex-wrap justify-between items-center">
               <div className="flex gap-4 text-gray-400 text-xl">
@@ -150,7 +185,7 @@ const Header = () => {
                     id="file-upload"
                     type="file"
                     accept="image/*"
-                    // onChange={handleImageChange}
+                    onChange={handleImageChange}
                     className="hidden"
                   />
                 </label>
@@ -161,7 +196,7 @@ const Header = () => {
               </div>
 
               <button
-                // onClick={handlePost}
+                onClick={handleEditPost}
                 className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm opacity-70 cursor-not-allowed"
               >
                 Next
@@ -169,7 +204,7 @@ const Header = () => {
             </div>
 
             <img
-              src={session?.user.image || ""}
+              src={image || ""}
               alt="Preview"
               className="mt-4 rounded-xl w-full max-h-60 object-cover border border-zinc-800"
             />

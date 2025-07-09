@@ -121,3 +121,21 @@ export async function AddCommentToPost(
 
   return newComment;
 }
+
+export async function EditUserBio(
+  userId: string | undefined,
+  username: string,
+  imageUrl: string | null
+) {
+  if (!userId || !username) return;
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      username,
+      image: imageUrl,
+    },
+  });
+
+  return updatedUser;
+}

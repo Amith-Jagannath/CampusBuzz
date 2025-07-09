@@ -27,9 +27,10 @@ const authOptions: AuthOptions = {
 
         if (dbUser) {
           session.user.id = dbUser.id;
+          session.user.username = dbUser.username || "";
         }
       }
-      console.log("session:",session)
+      console.log("session:", session);
 
       return session;
     },
