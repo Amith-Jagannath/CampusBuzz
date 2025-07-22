@@ -29,6 +29,11 @@ export type Session = $Result.DefaultSelection<Prisma.$SessionPayload>
  */
 export type College = $Result.DefaultSelection<Prisma.$CollegePayload>
 /**
+ * Model Club
+ * 
+ */
+export type Club = $Result.DefaultSelection<Prisma.$ClubPayload>
+/**
  * Model User
  * 
  */
@@ -203,6 +208,16 @@ export class PrismaClient<
     * ```
     */
   get college(): Prisma.CollegeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.club`: Exposes CRUD operations for the **Club** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Clubs
+    * const clubs = await prisma.club.findMany()
+    * ```
+    */
+  get club(): Prisma.ClubDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -686,6 +701,7 @@ export namespace Prisma {
     Account: 'Account',
     Session: 'Session',
     College: 'College',
+    Club: 'Club',
     User: 'User',
     VerificationRequest: 'VerificationRequest',
     Post: 'Post',
@@ -708,7 +724,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "session" | "college" | "user" | "verificationRequest" | "post" | "comment"
+      modelProps: "account" | "session" | "college" | "club" | "user" | "verificationRequest" | "post" | "comment"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -931,6 +947,80 @@ export namespace Prisma {
           count: {
             args: Prisma.CollegeCountArgs<ExtArgs>
             result: $Utils.Optional<CollegeCountAggregateOutputType> | number
+          }
+        }
+      }
+      Club: {
+        payload: Prisma.$ClubPayload<ExtArgs>
+        fields: Prisma.ClubFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ClubFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ClubFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload>
+          }
+          findFirst: {
+            args: Prisma.ClubFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ClubFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload>
+          }
+          findMany: {
+            args: Prisma.ClubFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload>[]
+          }
+          create: {
+            args: Prisma.ClubCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload>
+          }
+          createMany: {
+            args: Prisma.ClubCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ClubCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload>[]
+          }
+          delete: {
+            args: Prisma.ClubDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload>
+          }
+          update: {
+            args: Prisma.ClubUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload>
+          }
+          deleteMany: {
+            args: Prisma.ClubDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ClubUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ClubUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload>[]
+          }
+          upsert: {
+            args: Prisma.ClubUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClubPayload>
+          }
+          aggregate: {
+            args: Prisma.ClubAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateClub>
+          }
+          groupBy: {
+            args: Prisma.ClubGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ClubGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ClubCountArgs<ExtArgs>
+            result: $Utils.Optional<ClubCountAggregateOutputType> | number
           }
         }
       }
@@ -1317,6 +1407,7 @@ export namespace Prisma {
     account?: AccountOmit
     session?: SessionOmit
     college?: CollegeOmit
+    club?: ClubOmit
     user?: UserOmit
     verificationRequest?: VerificationRequestOmit
     post?: PostOmit
@@ -1446,6 +1537,46 @@ export namespace Prisma {
    * CollegeCountOutputType without action
    */
   export type CollegeCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+
+  /**
+   * Count Type ClubCountOutputType
+   */
+
+  export type ClubCountOutputType = {
+    posts: number
+    users: number
+  }
+
+  export type ClubCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    posts?: boolean | ClubCountOutputTypeCountPostsArgs
+    users?: boolean | ClubCountOutputTypeCountUsersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ClubCountOutputType without action
+   */
+  export type ClubCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClubCountOutputType
+     */
+    select?: ClubCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ClubCountOutputType without action
+   */
+  export type ClubCountOutputTypeCountPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PostWhereInput
+  }
+
+  /**
+   * ClubCountOutputType without action
+   */
+  export type ClubCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
   }
 
@@ -4823,6 +4954,1078 @@ export namespace Prisma {
 
 
   /**
+   * Model Club
+   */
+
+  export type AggregateClub = {
+    _count: ClubCountAggregateOutputType | null
+    _min: ClubMinAggregateOutputType | null
+    _max: ClubMaxAggregateOutputType | null
+  }
+
+  export type ClubMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    state: string | null
+  }
+
+  export type ClubMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    state: string | null
+  }
+
+  export type ClubCountAggregateOutputType = {
+    id: number
+    name: number
+    state: number
+    _all: number
+  }
+
+
+  export type ClubMinAggregateInputType = {
+    id?: true
+    name?: true
+    state?: true
+  }
+
+  export type ClubMaxAggregateInputType = {
+    id?: true
+    name?: true
+    state?: true
+  }
+
+  export type ClubCountAggregateInputType = {
+    id?: true
+    name?: true
+    state?: true
+    _all?: true
+  }
+
+  export type ClubAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Club to aggregate.
+     */
+    where?: ClubWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clubs to fetch.
+     */
+    orderBy?: ClubOrderByWithRelationInput | ClubOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ClubWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clubs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clubs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Clubs
+    **/
+    _count?: true | ClubCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ClubMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ClubMaxAggregateInputType
+  }
+
+  export type GetClubAggregateType<T extends ClubAggregateArgs> = {
+        [P in keyof T & keyof AggregateClub]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateClub[P]>
+      : GetScalarType<T[P], AggregateClub[P]>
+  }
+
+
+
+
+  export type ClubGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ClubWhereInput
+    orderBy?: ClubOrderByWithAggregationInput | ClubOrderByWithAggregationInput[]
+    by: ClubScalarFieldEnum[] | ClubScalarFieldEnum
+    having?: ClubScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ClubCountAggregateInputType | true
+    _min?: ClubMinAggregateInputType
+    _max?: ClubMaxAggregateInputType
+  }
+
+  export type ClubGroupByOutputType = {
+    id: string
+    name: string
+    state: string
+    _count: ClubCountAggregateOutputType | null
+    _min: ClubMinAggregateOutputType | null
+    _max: ClubMaxAggregateOutputType | null
+  }
+
+  type GetClubGroupByPayload<T extends ClubGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ClubGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ClubGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ClubGroupByOutputType[P]>
+            : GetScalarType<T[P], ClubGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ClubSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    state?: boolean
+    posts?: boolean | Club$postsArgs<ExtArgs>
+    users?: boolean | Club$usersArgs<ExtArgs>
+    _count?: boolean | ClubCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["club"]>
+
+  export type ClubSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    state?: boolean
+  }, ExtArgs["result"]["club"]>
+
+  export type ClubSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    state?: boolean
+  }, ExtArgs["result"]["club"]>
+
+  export type ClubSelectScalar = {
+    id?: boolean
+    name?: boolean
+    state?: boolean
+  }
+
+  export type ClubOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "state", ExtArgs["result"]["club"]>
+  export type ClubInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    posts?: boolean | Club$postsArgs<ExtArgs>
+    users?: boolean | Club$usersArgs<ExtArgs>
+    _count?: boolean | ClubCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ClubIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ClubIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ClubPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Club"
+    objects: {
+      posts: Prisma.$PostPayload<ExtArgs>[]
+      users: Prisma.$UserPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      state: string
+    }, ExtArgs["result"]["club"]>
+    composites: {}
+  }
+
+  type ClubGetPayload<S extends boolean | null | undefined | ClubDefaultArgs> = $Result.GetResult<Prisma.$ClubPayload, S>
+
+  type ClubCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ClubFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ClubCountAggregateInputType | true
+    }
+
+  export interface ClubDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Club'], meta: { name: 'Club' } }
+    /**
+     * Find zero or one Club that matches the filter.
+     * @param {ClubFindUniqueArgs} args - Arguments to find a Club
+     * @example
+     * // Get one Club
+     * const club = await prisma.club.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ClubFindUniqueArgs>(args: SelectSubset<T, ClubFindUniqueArgs<ExtArgs>>): Prisma__ClubClient<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Club that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ClubFindUniqueOrThrowArgs} args - Arguments to find a Club
+     * @example
+     * // Get one Club
+     * const club = await prisma.club.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ClubFindUniqueOrThrowArgs>(args: SelectSubset<T, ClubFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ClubClient<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Club that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClubFindFirstArgs} args - Arguments to find a Club
+     * @example
+     * // Get one Club
+     * const club = await prisma.club.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ClubFindFirstArgs>(args?: SelectSubset<T, ClubFindFirstArgs<ExtArgs>>): Prisma__ClubClient<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Club that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClubFindFirstOrThrowArgs} args - Arguments to find a Club
+     * @example
+     * // Get one Club
+     * const club = await prisma.club.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ClubFindFirstOrThrowArgs>(args?: SelectSubset<T, ClubFindFirstOrThrowArgs<ExtArgs>>): Prisma__ClubClient<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Clubs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClubFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Clubs
+     * const clubs = await prisma.club.findMany()
+     * 
+     * // Get first 10 Clubs
+     * const clubs = await prisma.club.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const clubWithIdOnly = await prisma.club.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ClubFindManyArgs>(args?: SelectSubset<T, ClubFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Club.
+     * @param {ClubCreateArgs} args - Arguments to create a Club.
+     * @example
+     * // Create one Club
+     * const Club = await prisma.club.create({
+     *   data: {
+     *     // ... data to create a Club
+     *   }
+     * })
+     * 
+     */
+    create<T extends ClubCreateArgs>(args: SelectSubset<T, ClubCreateArgs<ExtArgs>>): Prisma__ClubClient<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Clubs.
+     * @param {ClubCreateManyArgs} args - Arguments to create many Clubs.
+     * @example
+     * // Create many Clubs
+     * const club = await prisma.club.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ClubCreateManyArgs>(args?: SelectSubset<T, ClubCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Clubs and returns the data saved in the database.
+     * @param {ClubCreateManyAndReturnArgs} args - Arguments to create many Clubs.
+     * @example
+     * // Create many Clubs
+     * const club = await prisma.club.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Clubs and only return the `id`
+     * const clubWithIdOnly = await prisma.club.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ClubCreateManyAndReturnArgs>(args?: SelectSubset<T, ClubCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Club.
+     * @param {ClubDeleteArgs} args - Arguments to delete one Club.
+     * @example
+     * // Delete one Club
+     * const Club = await prisma.club.delete({
+     *   where: {
+     *     // ... filter to delete one Club
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ClubDeleteArgs>(args: SelectSubset<T, ClubDeleteArgs<ExtArgs>>): Prisma__ClubClient<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Club.
+     * @param {ClubUpdateArgs} args - Arguments to update one Club.
+     * @example
+     * // Update one Club
+     * const club = await prisma.club.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ClubUpdateArgs>(args: SelectSubset<T, ClubUpdateArgs<ExtArgs>>): Prisma__ClubClient<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Clubs.
+     * @param {ClubDeleteManyArgs} args - Arguments to filter Clubs to delete.
+     * @example
+     * // Delete a few Clubs
+     * const { count } = await prisma.club.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ClubDeleteManyArgs>(args?: SelectSubset<T, ClubDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Clubs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClubUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Clubs
+     * const club = await prisma.club.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ClubUpdateManyArgs>(args: SelectSubset<T, ClubUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Clubs and returns the data updated in the database.
+     * @param {ClubUpdateManyAndReturnArgs} args - Arguments to update many Clubs.
+     * @example
+     * // Update many Clubs
+     * const club = await prisma.club.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Clubs and only return the `id`
+     * const clubWithIdOnly = await prisma.club.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ClubUpdateManyAndReturnArgs>(args: SelectSubset<T, ClubUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Club.
+     * @param {ClubUpsertArgs} args - Arguments to update or create a Club.
+     * @example
+     * // Update or create a Club
+     * const club = await prisma.club.upsert({
+     *   create: {
+     *     // ... data to create a Club
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Club we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ClubUpsertArgs>(args: SelectSubset<T, ClubUpsertArgs<ExtArgs>>): Prisma__ClubClient<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Clubs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClubCountArgs} args - Arguments to filter Clubs to count.
+     * @example
+     * // Count the number of Clubs
+     * const count = await prisma.club.count({
+     *   where: {
+     *     // ... the filter for the Clubs we want to count
+     *   }
+     * })
+    **/
+    count<T extends ClubCountArgs>(
+      args?: Subset<T, ClubCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ClubCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Club.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClubAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ClubAggregateArgs>(args: Subset<T, ClubAggregateArgs>): Prisma.PrismaPromise<GetClubAggregateType<T>>
+
+    /**
+     * Group by Club.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClubGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ClubGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ClubGroupByArgs['orderBy'] }
+        : { orderBy?: ClubGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ClubGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClubGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Club model
+   */
+  readonly fields: ClubFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Club.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ClubClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    posts<T extends Club$postsArgs<ExtArgs> = {}>(args?: Subset<T, Club$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    users<T extends Club$usersArgs<ExtArgs> = {}>(args?: Subset<T, Club$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Club model
+   */
+  interface ClubFieldRefs {
+    readonly id: FieldRef<"Club", 'String'>
+    readonly name: FieldRef<"Club", 'String'>
+    readonly state: FieldRef<"Club", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Club findUnique
+   */
+  export type ClubFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    /**
+     * Filter, which Club to fetch.
+     */
+    where: ClubWhereUniqueInput
+  }
+
+  /**
+   * Club findUniqueOrThrow
+   */
+  export type ClubFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    /**
+     * Filter, which Club to fetch.
+     */
+    where: ClubWhereUniqueInput
+  }
+
+  /**
+   * Club findFirst
+   */
+  export type ClubFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    /**
+     * Filter, which Club to fetch.
+     */
+    where?: ClubWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clubs to fetch.
+     */
+    orderBy?: ClubOrderByWithRelationInput | ClubOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Clubs.
+     */
+    cursor?: ClubWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clubs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clubs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Clubs.
+     */
+    distinct?: ClubScalarFieldEnum | ClubScalarFieldEnum[]
+  }
+
+  /**
+   * Club findFirstOrThrow
+   */
+  export type ClubFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    /**
+     * Filter, which Club to fetch.
+     */
+    where?: ClubWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clubs to fetch.
+     */
+    orderBy?: ClubOrderByWithRelationInput | ClubOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Clubs.
+     */
+    cursor?: ClubWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clubs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clubs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Clubs.
+     */
+    distinct?: ClubScalarFieldEnum | ClubScalarFieldEnum[]
+  }
+
+  /**
+   * Club findMany
+   */
+  export type ClubFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    /**
+     * Filter, which Clubs to fetch.
+     */
+    where?: ClubWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clubs to fetch.
+     */
+    orderBy?: ClubOrderByWithRelationInput | ClubOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Clubs.
+     */
+    cursor?: ClubWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clubs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clubs.
+     */
+    skip?: number
+    distinct?: ClubScalarFieldEnum | ClubScalarFieldEnum[]
+  }
+
+  /**
+   * Club create
+   */
+  export type ClubCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Club.
+     */
+    data: XOR<ClubCreateInput, ClubUncheckedCreateInput>
+  }
+
+  /**
+   * Club createMany
+   */
+  export type ClubCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Clubs.
+     */
+    data: ClubCreateManyInput | ClubCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Club createManyAndReturn
+   */
+  export type ClubCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * The data used to create many Clubs.
+     */
+    data: ClubCreateManyInput | ClubCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Club update
+   */
+  export type ClubUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Club.
+     */
+    data: XOR<ClubUpdateInput, ClubUncheckedUpdateInput>
+    /**
+     * Choose, which Club to update.
+     */
+    where: ClubWhereUniqueInput
+  }
+
+  /**
+   * Club updateMany
+   */
+  export type ClubUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Clubs.
+     */
+    data: XOR<ClubUpdateManyMutationInput, ClubUncheckedUpdateManyInput>
+    /**
+     * Filter which Clubs to update
+     */
+    where?: ClubWhereInput
+    /**
+     * Limit how many Clubs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Club updateManyAndReturn
+   */
+  export type ClubUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * The data used to update Clubs.
+     */
+    data: XOR<ClubUpdateManyMutationInput, ClubUncheckedUpdateManyInput>
+    /**
+     * Filter which Clubs to update
+     */
+    where?: ClubWhereInput
+    /**
+     * Limit how many Clubs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Club upsert
+   */
+  export type ClubUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Club to update in case it exists.
+     */
+    where: ClubWhereUniqueInput
+    /**
+     * In case the Club found by the `where` argument doesn't exist, create a new Club with this data.
+     */
+    create: XOR<ClubCreateInput, ClubUncheckedCreateInput>
+    /**
+     * In case the Club was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ClubUpdateInput, ClubUncheckedUpdateInput>
+  }
+
+  /**
+   * Club delete
+   */
+  export type ClubDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    /**
+     * Filter which Club to delete.
+     */
+    where: ClubWhereUniqueInput
+  }
+
+  /**
+   * Club deleteMany
+   */
+  export type ClubDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Clubs to delete
+     */
+    where?: ClubWhereInput
+    /**
+     * Limit how many Clubs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Club.posts
+   */
+  export type Club$postsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Post
+     */
+    select?: PostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Post
+     */
+    omit?: PostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
+    where?: PostWhereInput
+    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
+    cursor?: PostWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
+  }
+
+  /**
+   * Club.users
+   */
+  export type Club$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * Club without action
+   */
+  export type ClubDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model User
    */
 
@@ -4841,7 +6044,8 @@ export namespace Prisma {
     image: string | null
     createdAt: Date | null
     updatedAt: Date | null
-    belongToCampus: string | null
+    collegeId: string | null
+    clubId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -4853,7 +6057,8 @@ export namespace Prisma {
     image: string | null
     createdAt: Date | null
     updatedAt: Date | null
-    belongToCampus: string | null
+    collegeId: string | null
+    clubId: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -4865,7 +6070,8 @@ export namespace Prisma {
     image: number
     createdAt: number
     updatedAt: number
-    belongToCampus: number
+    collegeId: number
+    clubId: number
     _all: number
   }
 
@@ -4879,7 +6085,8 @@ export namespace Prisma {
     image?: true
     createdAt?: true
     updatedAt?: true
-    belongToCampus?: true
+    collegeId?: true
+    clubId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -4891,7 +6098,8 @@ export namespace Prisma {
     image?: true
     createdAt?: true
     updatedAt?: true
-    belongToCampus?: true
+    collegeId?: true
+    clubId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -4903,7 +6111,8 @@ export namespace Prisma {
     image?: true
     createdAt?: true
     updatedAt?: true
-    belongToCampus?: true
+    collegeId?: true
+    clubId?: true
     _all?: true
   }
 
@@ -4988,7 +6197,8 @@ export namespace Prisma {
     image: string | null
     createdAt: Date
     updatedAt: Date
-    belongToCampus: string | null
+    collegeId: string | null
+    clubId: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -5017,8 +6227,10 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    belongToCampus?: boolean
+    collegeId?: boolean
+    clubId?: boolean
     college?: boolean | User$collegeArgs<ExtArgs>
+    club?: boolean | User$clubArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
@@ -5035,8 +6247,10 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    belongToCampus?: boolean
+    collegeId?: boolean
+    clubId?: boolean
     college?: boolean | User$collegeArgs<ExtArgs>
+    club?: boolean | User$clubArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5048,8 +6262,10 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    belongToCampus?: boolean
+    collegeId?: boolean
+    clubId?: boolean
     college?: boolean | User$collegeArgs<ExtArgs>
+    club?: boolean | User$clubArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -5061,12 +6277,14 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    belongToCampus?: boolean
+    collegeId?: boolean
+    clubId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "username" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "belongToCampus", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "username" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "collegeId" | "clubId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     college?: boolean | User$collegeArgs<ExtArgs>
+    club?: boolean | User$clubArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
@@ -5075,15 +6293,18 @@ export namespace Prisma {
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     college?: boolean | User$collegeArgs<ExtArgs>
+    club?: boolean | User$clubArgs<ExtArgs>
   }
   export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     college?: boolean | User$collegeArgs<ExtArgs>
+    club?: boolean | User$clubArgs<ExtArgs>
   }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
       college: Prisma.$CollegePayload<ExtArgs> | null
+      club: Prisma.$ClubPayload<ExtArgs> | null
       accounts: Prisma.$AccountPayload<ExtArgs>[]
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       comments: Prisma.$CommentPayload<ExtArgs>[]
@@ -5098,7 +6319,8 @@ export namespace Prisma {
       image: string | null
       createdAt: Date
       updatedAt: Date
-      belongToCampus: string | null
+      collegeId: string | null
+      clubId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -5494,6 +6716,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     college<T extends User$collegeArgs<ExtArgs> = {}>(args?: Subset<T, User$collegeArgs<ExtArgs>>): Prisma__CollegeClient<$Result.GetResult<Prisma.$CollegePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    club<T extends User$clubArgs<ExtArgs> = {}>(args?: Subset<T, User$clubArgs<ExtArgs>>): Prisma__ClubClient<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends User$commentsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5535,7 +6758,8 @@ export namespace Prisma {
     readonly image: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
-    readonly belongToCampus: FieldRef<"User", 'String'>
+    readonly collegeId: FieldRef<"User", 'String'>
+    readonly clubId: FieldRef<"User", 'String'>
   }
     
 
@@ -5948,6 +7172,25 @@ export namespace Prisma {
      */
     include?: CollegeInclude<ExtArgs> | null
     where?: CollegeWhereInput
+  }
+
+  /**
+   * User.club
+   */
+  export type User$clubArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    where?: ClubWhereInput
   }
 
   /**
@@ -7085,58 +8328,64 @@ export namespace Prisma {
 
   export type PostMinAggregateOutputType = {
     id: string | null
-    collegeId: string | null
     userId: string | null
     postUrl: string | null
     description: string | null
     createdAt: Date | null
+    collegeId: string | null
+    clubId: string | null
   }
 
   export type PostMaxAggregateOutputType = {
     id: string | null
-    collegeId: string | null
     userId: string | null
     postUrl: string | null
     description: string | null
     createdAt: Date | null
+    collegeId: string | null
+    clubId: string | null
   }
 
   export type PostCountAggregateOutputType = {
     id: number
-    collegeId: number
     userId: number
     postUrl: number
     description: number
     createdAt: number
+    collegeId: number
+    clubId: number
     _all: number
   }
 
 
   export type PostMinAggregateInputType = {
     id?: true
-    collegeId?: true
     userId?: true
     postUrl?: true
     description?: true
     createdAt?: true
+    collegeId?: true
+    clubId?: true
   }
 
   export type PostMaxAggregateInputType = {
     id?: true
-    collegeId?: true
     userId?: true
     postUrl?: true
     description?: true
     createdAt?: true
+    collegeId?: true
+    clubId?: true
   }
 
   export type PostCountAggregateInputType = {
     id?: true
-    collegeId?: true
     userId?: true
     postUrl?: true
     description?: true
     createdAt?: true
+    collegeId?: true
+    clubId?: true
     _all?: true
   }
 
@@ -7214,11 +8463,12 @@ export namespace Prisma {
 
   export type PostGroupByOutputType = {
     id: string
-    collegeId: string
     userId: string
     postUrl: string | null
     description: string
     createdAt: Date
+    collegeId: string | null
+    clubId: string | null
     _count: PostCountAggregateOutputType | null
     _min: PostMinAggregateOutputType | null
     _max: PostMaxAggregateOutputType | null
@@ -7240,62 +8490,72 @@ export namespace Prisma {
 
   export type PostSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    collegeId?: boolean
     userId?: boolean
     postUrl?: boolean
     description?: boolean
     createdAt?: boolean
+    collegeId?: boolean
+    clubId?: boolean
     comments?: boolean | Post$commentsArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    college?: boolean | CollegeDefaultArgs<ExtArgs>
+    college?: boolean | Post$collegeArgs<ExtArgs>
+    club?: boolean | Post$clubArgs<ExtArgs>
     _count?: boolean | PostCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    collegeId?: boolean
     userId?: boolean
     postUrl?: boolean
     description?: boolean
     createdAt?: boolean
+    collegeId?: boolean
+    clubId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    college?: boolean | CollegeDefaultArgs<ExtArgs>
+    college?: boolean | Post$collegeArgs<ExtArgs>
+    club?: boolean | Post$clubArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    collegeId?: boolean
     userId?: boolean
     postUrl?: boolean
     description?: boolean
     createdAt?: boolean
+    collegeId?: boolean
+    clubId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    college?: boolean | CollegeDefaultArgs<ExtArgs>
+    college?: boolean | Post$collegeArgs<ExtArgs>
+    club?: boolean | Post$clubArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectScalar = {
     id?: boolean
-    collegeId?: boolean
     userId?: boolean
     postUrl?: boolean
     description?: boolean
     createdAt?: boolean
+    collegeId?: boolean
+    clubId?: boolean
   }
 
-  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "collegeId" | "userId" | "postUrl" | "description" | "createdAt", ExtArgs["result"]["post"]>
+  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "postUrl" | "description" | "createdAt" | "collegeId" | "clubId", ExtArgs["result"]["post"]>
   export type PostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     comments?: boolean | Post$commentsArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    college?: boolean | CollegeDefaultArgs<ExtArgs>
+    college?: boolean | Post$collegeArgs<ExtArgs>
+    club?: boolean | Post$clubArgs<ExtArgs>
     _count?: boolean | PostCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PostIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    college?: boolean | CollegeDefaultArgs<ExtArgs>
+    college?: boolean | Post$collegeArgs<ExtArgs>
+    club?: boolean | Post$clubArgs<ExtArgs>
   }
   export type PostIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    college?: boolean | CollegeDefaultArgs<ExtArgs>
+    college?: boolean | Post$collegeArgs<ExtArgs>
+    club?: boolean | Post$clubArgs<ExtArgs>
   }
 
   export type $PostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7303,15 +8563,17 @@ export namespace Prisma {
     objects: {
       comments: Prisma.$CommentPayload<ExtArgs>[]
       user: Prisma.$UserPayload<ExtArgs>
-      college: Prisma.$CollegePayload<ExtArgs>
+      college: Prisma.$CollegePayload<ExtArgs> | null
+      club: Prisma.$ClubPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      collegeId: string
       userId: string
       postUrl: string | null
       description: string
       createdAt: Date
+      collegeId: string | null
+      clubId: string | null
     }, ExtArgs["result"]["post"]>
     composites: {}
   }
@@ -7708,7 +8970,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     comments<T extends Post$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Post$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    college<T extends CollegeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CollegeDefaultArgs<ExtArgs>>): Prisma__CollegeClient<$Result.GetResult<Prisma.$CollegePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    college<T extends Post$collegeArgs<ExtArgs> = {}>(args?: Subset<T, Post$collegeArgs<ExtArgs>>): Prisma__CollegeClient<$Result.GetResult<Prisma.$CollegePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    club<T extends Post$clubArgs<ExtArgs> = {}>(args?: Subset<T, Post$clubArgs<ExtArgs>>): Prisma__ClubClient<$Result.GetResult<Prisma.$ClubPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7739,11 +9002,12 @@ export namespace Prisma {
    */
   interface PostFieldRefs {
     readonly id: FieldRef<"Post", 'String'>
-    readonly collegeId: FieldRef<"Post", 'String'>
     readonly userId: FieldRef<"Post", 'String'>
     readonly postUrl: FieldRef<"Post", 'String'>
     readonly description: FieldRef<"Post", 'String'>
     readonly createdAt: FieldRef<"Post", 'DateTime'>
+    readonly collegeId: FieldRef<"Post", 'String'>
+    readonly clubId: FieldRef<"Post", 'String'>
   }
     
 
@@ -8161,6 +9425,44 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CommentScalarFieldEnum | CommentScalarFieldEnum[]
+  }
+
+  /**
+   * Post.college
+   */
+  export type Post$collegeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the College
+     */
+    select?: CollegeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the College
+     */
+    omit?: CollegeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CollegeInclude<ExtArgs> | null
+    where?: CollegeWhereInput
+  }
+
+  /**
+   * Post.club
+   */
+  export type Post$clubArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Club
+     */
+    select?: ClubSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Club
+     */
+    omit?: ClubOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClubInclude<ExtArgs> | null
+    where?: ClubWhereInput
   }
 
   /**
@@ -9300,6 +10602,15 @@ export namespace Prisma {
   export type CollegeScalarFieldEnum = (typeof CollegeScalarFieldEnum)[keyof typeof CollegeScalarFieldEnum]
 
 
+  export const ClubScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    state: 'state'
+  };
+
+  export type ClubScalarFieldEnum = (typeof ClubScalarFieldEnum)[keyof typeof ClubScalarFieldEnum]
+
+
   export const UserScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -9309,7 +10620,8 @@ export namespace Prisma {
     image: 'image',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    belongToCampus: 'belongToCampus'
+    collegeId: 'collegeId',
+    clubId: 'clubId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -9329,11 +10641,12 @@ export namespace Prisma {
 
   export const PostScalarFieldEnum: {
     id: 'id',
-    collegeId: 'collegeId',
     userId: 'userId',
     postUrl: 'postUrl',
     description: 'description',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    collegeId: 'collegeId',
+    clubId: 'clubId'
   };
 
   export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
@@ -9618,6 +10931,54 @@ export namespace Prisma {
     state?: StringWithAggregatesFilter<"College"> | string
   }
 
+  export type ClubWhereInput = {
+    AND?: ClubWhereInput | ClubWhereInput[]
+    OR?: ClubWhereInput[]
+    NOT?: ClubWhereInput | ClubWhereInput[]
+    id?: StringFilter<"Club"> | string
+    name?: StringFilter<"Club"> | string
+    state?: StringFilter<"Club"> | string
+    posts?: PostListRelationFilter
+    users?: UserListRelationFilter
+  }
+
+  export type ClubOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    state?: SortOrder
+    posts?: PostOrderByRelationAggregateInput
+    users?: UserOrderByRelationAggregateInput
+  }
+
+  export type ClubWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: ClubWhereInput | ClubWhereInput[]
+    OR?: ClubWhereInput[]
+    NOT?: ClubWhereInput | ClubWhereInput[]
+    state?: StringFilter<"Club"> | string
+    posts?: PostListRelationFilter
+    users?: UserListRelationFilter
+  }, "id" | "name">
+
+  export type ClubOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    state?: SortOrder
+    _count?: ClubCountOrderByAggregateInput
+    _max?: ClubMaxOrderByAggregateInput
+    _min?: ClubMinOrderByAggregateInput
+  }
+
+  export type ClubScalarWhereWithAggregatesInput = {
+    AND?: ClubScalarWhereWithAggregatesInput | ClubScalarWhereWithAggregatesInput[]
+    OR?: ClubScalarWhereWithAggregatesInput[]
+    NOT?: ClubScalarWhereWithAggregatesInput | ClubScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Club"> | string
+    name?: StringWithAggregatesFilter<"Club"> | string
+    state?: StringWithAggregatesFilter<"Club"> | string
+  }
+
   export type UserWhereInput = {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
@@ -9630,8 +10991,10 @@ export namespace Prisma {
     image?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    belongToCampus?: StringNullableFilter<"User"> | string | null
+    collegeId?: StringNullableFilter<"User"> | string | null
+    clubId?: StringNullableFilter<"User"> | string | null
     college?: XOR<CollegeNullableScalarRelationFilter, CollegeWhereInput> | null
+    club?: XOR<ClubNullableScalarRelationFilter, ClubWhereInput> | null
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
     comments?: CommentListRelationFilter
@@ -9647,8 +11010,10 @@ export namespace Prisma {
     image?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    belongToCampus?: SortOrderInput | SortOrder
+    collegeId?: SortOrderInput | SortOrder
+    clubId?: SortOrderInput | SortOrder
     college?: CollegeOrderByWithRelationInput
+    club?: ClubOrderByWithRelationInput
     accounts?: AccountOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
     comments?: CommentOrderByRelationAggregateInput
@@ -9667,8 +11032,10 @@ export namespace Prisma {
     image?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    belongToCampus?: StringNullableFilter<"User"> | string | null
+    collegeId?: StringNullableFilter<"User"> | string | null
+    clubId?: StringNullableFilter<"User"> | string | null
     college?: XOR<CollegeNullableScalarRelationFilter, CollegeWhereInput> | null
+    club?: XOR<ClubNullableScalarRelationFilter, ClubWhereInput> | null
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
     comments?: CommentListRelationFilter
@@ -9684,7 +11051,8 @@ export namespace Prisma {
     image?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    belongToCampus?: SortOrderInput | SortOrder
+    collegeId?: SortOrderInput | SortOrder
+    clubId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -9702,7 +11070,8 @@ export namespace Prisma {
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
-    belongToCampus?: StringNullableWithAggregatesFilter<"User"> | string | null
+    collegeId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    clubId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type VerificationRequestWhereInput = {
@@ -9768,26 +11137,30 @@ export namespace Prisma {
     OR?: PostWhereInput[]
     NOT?: PostWhereInput | PostWhereInput[]
     id?: StringFilter<"Post"> | string
-    collegeId?: StringFilter<"Post"> | string
     userId?: StringFilter<"Post"> | string
     postUrl?: StringNullableFilter<"Post"> | string | null
     description?: StringFilter<"Post"> | string
     createdAt?: DateTimeFilter<"Post"> | Date | string
+    collegeId?: StringNullableFilter<"Post"> | string | null
+    clubId?: StringNullableFilter<"Post"> | string | null
     comments?: CommentListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    college?: XOR<CollegeScalarRelationFilter, CollegeWhereInput>
+    college?: XOR<CollegeNullableScalarRelationFilter, CollegeWhereInput> | null
+    club?: XOR<ClubNullableScalarRelationFilter, ClubWhereInput> | null
   }
 
   export type PostOrderByWithRelationInput = {
     id?: SortOrder
-    collegeId?: SortOrder
     userId?: SortOrder
     postUrl?: SortOrderInput | SortOrder
     description?: SortOrder
     createdAt?: SortOrder
+    collegeId?: SortOrderInput | SortOrder
+    clubId?: SortOrderInput | SortOrder
     comments?: CommentOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
     college?: CollegeOrderByWithRelationInput
+    club?: ClubOrderByWithRelationInput
   }
 
   export type PostWhereUniqueInput = Prisma.AtLeast<{
@@ -9795,23 +11168,26 @@ export namespace Prisma {
     AND?: PostWhereInput | PostWhereInput[]
     OR?: PostWhereInput[]
     NOT?: PostWhereInput | PostWhereInput[]
-    collegeId?: StringFilter<"Post"> | string
     userId?: StringFilter<"Post"> | string
     postUrl?: StringNullableFilter<"Post"> | string | null
     description?: StringFilter<"Post"> | string
     createdAt?: DateTimeFilter<"Post"> | Date | string
+    collegeId?: StringNullableFilter<"Post"> | string | null
+    clubId?: StringNullableFilter<"Post"> | string | null
     comments?: CommentListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    college?: XOR<CollegeScalarRelationFilter, CollegeWhereInput>
+    college?: XOR<CollegeNullableScalarRelationFilter, CollegeWhereInput> | null
+    club?: XOR<ClubNullableScalarRelationFilter, ClubWhereInput> | null
   }, "id">
 
   export type PostOrderByWithAggregationInput = {
     id?: SortOrder
-    collegeId?: SortOrder
     userId?: SortOrder
     postUrl?: SortOrderInput | SortOrder
     description?: SortOrder
     createdAt?: SortOrder
+    collegeId?: SortOrderInput | SortOrder
+    clubId?: SortOrderInput | SortOrder
     _count?: PostCountOrderByAggregateInput
     _max?: PostMaxOrderByAggregateInput
     _min?: PostMinOrderByAggregateInput
@@ -9822,11 +11198,12 @@ export namespace Prisma {
     OR?: PostScalarWhereWithAggregatesInput[]
     NOT?: PostScalarWhereWithAggregatesInput | PostScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Post"> | string
-    collegeId?: StringWithAggregatesFilter<"Post"> | string
     userId?: StringWithAggregatesFilter<"Post"> | string
     postUrl?: StringNullableWithAggregatesFilter<"Post"> | string | null
     description?: StringWithAggregatesFilter<"Post"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
+    collegeId?: StringNullableWithAggregatesFilter<"Post"> | string | null
+    clubId?: StringNullableWithAggregatesFilter<"Post"> | string | null
   }
 
   export type CommentWhereInput = {
@@ -10096,6 +11473,56 @@ export namespace Prisma {
     state?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ClubCreateInput = {
+    id?: string
+    name: string
+    state: string
+    posts?: PostCreateNestedManyWithoutClubInput
+    users?: UserCreateNestedManyWithoutClubInput
+  }
+
+  export type ClubUncheckedCreateInput = {
+    id?: string
+    name: string
+    state: string
+    posts?: PostUncheckedCreateNestedManyWithoutClubInput
+    users?: UserUncheckedCreateNestedManyWithoutClubInput
+  }
+
+  export type ClubUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    posts?: PostUpdateManyWithoutClubNestedInput
+    users?: UserUpdateManyWithoutClubNestedInput
+  }
+
+  export type ClubUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    posts?: PostUncheckedUpdateManyWithoutClubNestedInput
+    users?: UserUncheckedUpdateManyWithoutClubNestedInput
+  }
+
+  export type ClubCreateManyInput = {
+    id?: string
+    name: string
+    state: string
+  }
+
+  export type ClubUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ClubUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name?: string | null
@@ -10106,6 +11533,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     college?: CollegeCreateNestedOneWithoutUsersInput
+    club?: ClubCreateNestedOneWithoutUsersInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
@@ -10121,7 +11549,8 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    belongToCampus?: string | null
+    collegeId?: string | null
+    clubId?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
@@ -10138,6 +11567,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     college?: CollegeUpdateOneWithoutUsersNestedInput
+    club?: ClubUpdateOneWithoutUsersNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
@@ -10153,7 +11583,8 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    belongToCampus?: NullableStringFieldUpdateOperationsInput | string | null
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
@@ -10169,7 +11600,8 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    belongToCampus?: string | null
+    collegeId?: string | null
+    clubId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -10192,7 +11624,8 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    belongToCampus?: NullableStringFieldUpdateOperationsInput | string | null
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VerificationRequestCreateInput = {
@@ -10265,16 +11698,18 @@ export namespace Prisma {
     createdAt?: Date | string
     comments?: CommentCreateNestedManyWithoutPostInput
     user: UserCreateNestedOneWithoutPostsInput
-    college: CollegeCreateNestedOneWithoutPostsInput
+    college?: CollegeCreateNestedOneWithoutPostsInput
+    club?: ClubCreateNestedOneWithoutPostsInput
   }
 
   export type PostUncheckedCreateInput = {
     id?: string
-    collegeId: string
     userId: string
     postUrl?: string | null
     description: string
     createdAt?: Date | string
+    collegeId?: string | null
+    clubId?: string | null
     comments?: CommentUncheckedCreateNestedManyWithoutPostInput
   }
 
@@ -10285,26 +11720,29 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUpdateManyWithoutPostNestedInput
     user?: UserUpdateOneRequiredWithoutPostsNestedInput
-    college?: CollegeUpdateOneRequiredWithoutPostsNestedInput
+    college?: CollegeUpdateOneWithoutPostsNestedInput
+    club?: ClubUpdateOneWithoutPostsNestedInput
   }
 
   export type PostUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    collegeId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     postUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
     comments?: CommentUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type PostCreateManyInput = {
     id?: string
-    collegeId: string
     userId: string
     postUrl?: string | null
     description: string
     createdAt?: Date | string
+    collegeId?: string | null
+    clubId?: string | null
   }
 
   export type PostUpdateManyMutationInput = {
@@ -10316,11 +11754,12 @@ export namespace Prisma {
 
   export type PostUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    collegeId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     postUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CommentCreateInput = {
@@ -10615,9 +12054,32 @@ export namespace Prisma {
     state?: SortOrder
   }
 
+  export type ClubCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    state?: SortOrder
+  }
+
+  export type ClubMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    state?: SortOrder
+  }
+
+  export type ClubMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    state?: SortOrder
+  }
+
   export type CollegeNullableScalarRelationFilter = {
     is?: CollegeWhereInput | null
     isNot?: CollegeWhereInput | null
+  }
+
+  export type ClubNullableScalarRelationFilter = {
+    is?: ClubWhereInput | null
+    isNot?: ClubWhereInput | null
   }
 
   export type AccountListRelationFilter = {
@@ -10659,7 +12121,8 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    belongToCampus?: SortOrder
+    collegeId?: SortOrder
+    clubId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -10671,7 +12134,8 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    belongToCampus?: SortOrder
+    collegeId?: SortOrder
+    clubId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -10683,7 +12147,8 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    belongToCampus?: SortOrder
+    collegeId?: SortOrder
+    clubId?: SortOrder
   }
 
   export type VerificationRequestIdentifierTokenCompoundUniqueInput = {
@@ -10718,36 +12183,34 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type CollegeScalarRelationFilter = {
-    is?: CollegeWhereInput
-    isNot?: CollegeWhereInput
-  }
-
   export type PostCountOrderByAggregateInput = {
     id?: SortOrder
-    collegeId?: SortOrder
     userId?: SortOrder
     postUrl?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
+    collegeId?: SortOrder
+    clubId?: SortOrder
   }
 
   export type PostMaxOrderByAggregateInput = {
     id?: SortOrder
-    collegeId?: SortOrder
     userId?: SortOrder
     postUrl?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
+    collegeId?: SortOrder
+    clubId?: SortOrder
   }
 
   export type PostMinOrderByAggregateInput = {
     id?: SortOrder
-    collegeId?: SortOrder
     userId?: SortOrder
     postUrl?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
+    collegeId?: SortOrder
+    clubId?: SortOrder
   }
 
   export type PostScalarRelationFilter = {
@@ -10907,10 +12370,100 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type PostCreateNestedManyWithoutClubInput = {
+    create?: XOR<PostCreateWithoutClubInput, PostUncheckedCreateWithoutClubInput> | PostCreateWithoutClubInput[] | PostUncheckedCreateWithoutClubInput[]
+    connectOrCreate?: PostCreateOrConnectWithoutClubInput | PostCreateOrConnectWithoutClubInput[]
+    createMany?: PostCreateManyClubInputEnvelope
+    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedManyWithoutClubInput = {
+    create?: XOR<UserCreateWithoutClubInput, UserUncheckedCreateWithoutClubInput> | UserCreateWithoutClubInput[] | UserUncheckedCreateWithoutClubInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutClubInput | UserCreateOrConnectWithoutClubInput[]
+    createMany?: UserCreateManyClubInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type PostUncheckedCreateNestedManyWithoutClubInput = {
+    create?: XOR<PostCreateWithoutClubInput, PostUncheckedCreateWithoutClubInput> | PostCreateWithoutClubInput[] | PostUncheckedCreateWithoutClubInput[]
+    connectOrCreate?: PostCreateOrConnectWithoutClubInput | PostCreateOrConnectWithoutClubInput[]
+    createMany?: PostCreateManyClubInputEnvelope
+    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutClubInput = {
+    create?: XOR<UserCreateWithoutClubInput, UserUncheckedCreateWithoutClubInput> | UserCreateWithoutClubInput[] | UserUncheckedCreateWithoutClubInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutClubInput | UserCreateOrConnectWithoutClubInput[]
+    createMany?: UserCreateManyClubInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type PostUpdateManyWithoutClubNestedInput = {
+    create?: XOR<PostCreateWithoutClubInput, PostUncheckedCreateWithoutClubInput> | PostCreateWithoutClubInput[] | PostUncheckedCreateWithoutClubInput[]
+    connectOrCreate?: PostCreateOrConnectWithoutClubInput | PostCreateOrConnectWithoutClubInput[]
+    upsert?: PostUpsertWithWhereUniqueWithoutClubInput | PostUpsertWithWhereUniqueWithoutClubInput[]
+    createMany?: PostCreateManyClubInputEnvelope
+    set?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    disconnect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    delete?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    update?: PostUpdateWithWhereUniqueWithoutClubInput | PostUpdateWithWhereUniqueWithoutClubInput[]
+    updateMany?: PostUpdateManyWithWhereWithoutClubInput | PostUpdateManyWithWhereWithoutClubInput[]
+    deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
+  }
+
+  export type UserUpdateManyWithoutClubNestedInput = {
+    create?: XOR<UserCreateWithoutClubInput, UserUncheckedCreateWithoutClubInput> | UserCreateWithoutClubInput[] | UserUncheckedCreateWithoutClubInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutClubInput | UserCreateOrConnectWithoutClubInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutClubInput | UserUpsertWithWhereUniqueWithoutClubInput[]
+    createMany?: UserCreateManyClubInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutClubInput | UserUpdateWithWhereUniqueWithoutClubInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutClubInput | UserUpdateManyWithWhereWithoutClubInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type PostUncheckedUpdateManyWithoutClubNestedInput = {
+    create?: XOR<PostCreateWithoutClubInput, PostUncheckedCreateWithoutClubInput> | PostCreateWithoutClubInput[] | PostUncheckedCreateWithoutClubInput[]
+    connectOrCreate?: PostCreateOrConnectWithoutClubInput | PostCreateOrConnectWithoutClubInput[]
+    upsert?: PostUpsertWithWhereUniqueWithoutClubInput | PostUpsertWithWhereUniqueWithoutClubInput[]
+    createMany?: PostCreateManyClubInputEnvelope
+    set?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    disconnect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    delete?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    update?: PostUpdateWithWhereUniqueWithoutClubInput | PostUpdateWithWhereUniqueWithoutClubInput[]
+    updateMany?: PostUpdateManyWithWhereWithoutClubInput | PostUpdateManyWithWhereWithoutClubInput[]
+    deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutClubNestedInput = {
+    create?: XOR<UserCreateWithoutClubInput, UserUncheckedCreateWithoutClubInput> | UserCreateWithoutClubInput[] | UserUncheckedCreateWithoutClubInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutClubInput | UserCreateOrConnectWithoutClubInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutClubInput | UserUpsertWithWhereUniqueWithoutClubInput[]
+    createMany?: UserCreateManyClubInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutClubInput | UserUpdateWithWhereUniqueWithoutClubInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutClubInput | UserUpdateManyWithWhereWithoutClubInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
   export type CollegeCreateNestedOneWithoutUsersInput = {
     create?: XOR<CollegeCreateWithoutUsersInput, CollegeUncheckedCreateWithoutUsersInput>
     connectOrCreate?: CollegeCreateOrConnectWithoutUsersInput
     connect?: CollegeWhereUniqueInput
+  }
+
+  export type ClubCreateNestedOneWithoutUsersInput = {
+    create?: XOR<ClubCreateWithoutUsersInput, ClubUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: ClubCreateOrConnectWithoutUsersInput
+    connect?: ClubWhereUniqueInput
   }
 
   export type AccountCreateNestedManyWithoutUserInput = {
@@ -10977,6 +12530,16 @@ export namespace Prisma {
     delete?: CollegeWhereInput | boolean
     connect?: CollegeWhereUniqueInput
     update?: XOR<XOR<CollegeUpdateToOneWithWhereWithoutUsersInput, CollegeUpdateWithoutUsersInput>, CollegeUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type ClubUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<ClubCreateWithoutUsersInput, ClubUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: ClubCreateOrConnectWithoutUsersInput
+    upsert?: ClubUpsertWithoutUsersInput
+    disconnect?: ClubWhereInput | boolean
+    delete?: ClubWhereInput | boolean
+    connect?: ClubWhereUniqueInput
+    update?: XOR<XOR<ClubUpdateToOneWithWhereWithoutUsersInput, ClubUpdateWithoutUsersInput>, ClubUncheckedUpdateWithoutUsersInput>
   }
 
   export type AccountUpdateManyWithoutUserNestedInput = {
@@ -11110,6 +12673,12 @@ export namespace Prisma {
     connect?: CollegeWhereUniqueInput
   }
 
+  export type ClubCreateNestedOneWithoutPostsInput = {
+    create?: XOR<ClubCreateWithoutPostsInput, ClubUncheckedCreateWithoutPostsInput>
+    connectOrCreate?: ClubCreateOrConnectWithoutPostsInput
+    connect?: ClubWhereUniqueInput
+  }
+
   export type CommentUncheckedCreateNestedManyWithoutPostInput = {
     create?: XOR<CommentCreateWithoutPostInput, CommentUncheckedCreateWithoutPostInput> | CommentCreateWithoutPostInput[] | CommentUncheckedCreateWithoutPostInput[]
     connectOrCreate?: CommentCreateOrConnectWithoutPostInput | CommentCreateOrConnectWithoutPostInput[]
@@ -11139,12 +12708,24 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPostsInput, UserUpdateWithoutPostsInput>, UserUncheckedUpdateWithoutPostsInput>
   }
 
-  export type CollegeUpdateOneRequiredWithoutPostsNestedInput = {
+  export type CollegeUpdateOneWithoutPostsNestedInput = {
     create?: XOR<CollegeCreateWithoutPostsInput, CollegeUncheckedCreateWithoutPostsInput>
     connectOrCreate?: CollegeCreateOrConnectWithoutPostsInput
     upsert?: CollegeUpsertWithoutPostsInput
+    disconnect?: CollegeWhereInput | boolean
+    delete?: CollegeWhereInput | boolean
     connect?: CollegeWhereUniqueInput
     update?: XOR<XOR<CollegeUpdateToOneWithWhereWithoutPostsInput, CollegeUpdateWithoutPostsInput>, CollegeUncheckedUpdateWithoutPostsInput>
+  }
+
+  export type ClubUpdateOneWithoutPostsNestedInput = {
+    create?: XOR<ClubCreateWithoutPostsInput, ClubUncheckedCreateWithoutPostsInput>
+    connectOrCreate?: ClubCreateOrConnectWithoutPostsInput
+    upsert?: ClubUpsertWithoutPostsInput
+    disconnect?: ClubWhereInput | boolean
+    delete?: ClubWhereInput | boolean
+    connect?: ClubWhereUniqueInput
+    update?: XOR<XOR<ClubUpdateToOneWithWhereWithoutPostsInput, ClubUpdateWithoutPostsInput>, ClubUncheckedUpdateWithoutPostsInput>
   }
 
   export type CommentUncheckedUpdateManyWithoutPostNestedInput = {
@@ -11333,6 +12914,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     college?: CollegeCreateNestedOneWithoutUsersInput
+    club?: ClubCreateNestedOneWithoutUsersInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
     posts?: PostCreateNestedManyWithoutUserInput
@@ -11347,7 +12929,8 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    belongToCampus?: string | null
+    collegeId?: string | null
+    clubId?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     posts?: PostUncheckedCreateNestedManyWithoutUserInput
@@ -11379,6 +12962,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     college?: CollegeUpdateOneWithoutUsersNestedInput
+    club?: ClubUpdateOneWithoutUsersNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
     posts?: PostUpdateManyWithoutUserNestedInput
@@ -11393,7 +12977,8 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    belongToCampus?: NullableStringFieldUpdateOperationsInput | string | null
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     posts?: PostUncheckedUpdateManyWithoutUserNestedInput
@@ -11409,6 +12994,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     college?: CollegeCreateNestedOneWithoutUsersInput
+    club?: ClubCreateNestedOneWithoutUsersInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
     posts?: PostCreateNestedManyWithoutUserInput
@@ -11423,7 +13009,8 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    belongToCampus?: string | null
+    collegeId?: string | null
+    clubId?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     posts?: PostUncheckedCreateNestedManyWithoutUserInput
@@ -11455,6 +13042,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     college?: CollegeUpdateOneWithoutUsersNestedInput
+    club?: ClubUpdateOneWithoutUsersNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
     posts?: PostUpdateManyWithoutUserNestedInput
@@ -11469,7 +13057,8 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    belongToCampus?: NullableStringFieldUpdateOperationsInput | string | null
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     posts?: PostUncheckedUpdateManyWithoutUserNestedInput
@@ -11482,6 +13071,7 @@ export namespace Prisma {
     createdAt?: Date | string
     comments?: CommentCreateNestedManyWithoutPostInput
     user: UserCreateNestedOneWithoutPostsInput
+    club?: ClubCreateNestedOneWithoutPostsInput
   }
 
   export type PostUncheckedCreateWithoutCollegeInput = {
@@ -11490,6 +13080,7 @@ export namespace Prisma {
     postUrl?: string | null
     description: string
     createdAt?: Date | string
+    clubId?: string | null
     comments?: CommentUncheckedCreateNestedManyWithoutPostInput
   }
 
@@ -11512,6 +13103,7 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    club?: ClubCreateNestedOneWithoutUsersInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
@@ -11527,6 +13119,7 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    clubId?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
@@ -11564,11 +13157,12 @@ export namespace Prisma {
     OR?: PostScalarWhereInput[]
     NOT?: PostScalarWhereInput | PostScalarWhereInput[]
     id?: StringFilter<"Post"> | string
-    collegeId?: StringFilter<"Post"> | string
     userId?: StringFilter<"Post"> | string
     postUrl?: StringNullableFilter<"Post"> | string | null
     description?: StringFilter<"Post"> | string
     createdAt?: DateTimeFilter<"Post"> | Date | string
+    collegeId?: StringNullableFilter<"Post"> | string | null
+    clubId?: StringNullableFilter<"Post"> | string | null
   }
 
   export type UserUpsertWithWhereUniqueWithoutCollegeInput = {
@@ -11599,7 +13193,112 @@ export namespace Prisma {
     image?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    belongToCampus?: StringNullableFilter<"User"> | string | null
+    collegeId?: StringNullableFilter<"User"> | string | null
+    clubId?: StringNullableFilter<"User"> | string | null
+  }
+
+  export type PostCreateWithoutClubInput = {
+    id?: string
+    postUrl?: string | null
+    description: string
+    createdAt?: Date | string
+    comments?: CommentCreateNestedManyWithoutPostInput
+    user: UserCreateNestedOneWithoutPostsInput
+    college?: CollegeCreateNestedOneWithoutPostsInput
+  }
+
+  export type PostUncheckedCreateWithoutClubInput = {
+    id?: string
+    userId: string
+    postUrl?: string | null
+    description: string
+    createdAt?: Date | string
+    collegeId?: string | null
+    comments?: CommentUncheckedCreateNestedManyWithoutPostInput
+  }
+
+  export type PostCreateOrConnectWithoutClubInput = {
+    where: PostWhereUniqueInput
+    create: XOR<PostCreateWithoutClubInput, PostUncheckedCreateWithoutClubInput>
+  }
+
+  export type PostCreateManyClubInputEnvelope = {
+    data: PostCreateManyClubInput | PostCreateManyClubInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserCreateWithoutClubInput = {
+    id?: string
+    name?: string | null
+    username?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    college?: CollegeCreateNestedOneWithoutUsersInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    posts?: PostCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutClubInput = {
+    id?: string
+    name?: string | null
+    username?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    collegeId?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    posts?: PostUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutClubInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutClubInput, UserUncheckedCreateWithoutClubInput>
+  }
+
+  export type UserCreateManyClubInputEnvelope = {
+    data: UserCreateManyClubInput | UserCreateManyClubInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PostUpsertWithWhereUniqueWithoutClubInput = {
+    where: PostWhereUniqueInput
+    update: XOR<PostUpdateWithoutClubInput, PostUncheckedUpdateWithoutClubInput>
+    create: XOR<PostCreateWithoutClubInput, PostUncheckedCreateWithoutClubInput>
+  }
+
+  export type PostUpdateWithWhereUniqueWithoutClubInput = {
+    where: PostWhereUniqueInput
+    data: XOR<PostUpdateWithoutClubInput, PostUncheckedUpdateWithoutClubInput>
+  }
+
+  export type PostUpdateManyWithWhereWithoutClubInput = {
+    where: PostScalarWhereInput
+    data: XOR<PostUpdateManyMutationInput, PostUncheckedUpdateManyWithoutClubInput>
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutClubInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutClubInput, UserUncheckedUpdateWithoutClubInput>
+    create: XOR<UserCreateWithoutClubInput, UserUncheckedCreateWithoutClubInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutClubInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutClubInput, UserUncheckedUpdateWithoutClubInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutClubInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutClubInput>
   }
 
   export type CollegeCreateWithoutUsersInput = {
@@ -11619,6 +13318,25 @@ export namespace Prisma {
   export type CollegeCreateOrConnectWithoutUsersInput = {
     where: CollegeWhereUniqueInput
     create: XOR<CollegeCreateWithoutUsersInput, CollegeUncheckedCreateWithoutUsersInput>
+  }
+
+  export type ClubCreateWithoutUsersInput = {
+    id?: string
+    name: string
+    state: string
+    posts?: PostCreateNestedManyWithoutClubInput
+  }
+
+  export type ClubUncheckedCreateWithoutUsersInput = {
+    id?: string
+    name: string
+    state: string
+    posts?: PostUncheckedCreateNestedManyWithoutClubInput
+  }
+
+  export type ClubCreateOrConnectWithoutUsersInput = {
+    where: ClubWhereUniqueInput
+    create: XOR<ClubCreateWithoutUsersInput, ClubUncheckedCreateWithoutUsersInput>
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -11713,15 +13431,17 @@ export namespace Prisma {
     description: string
     createdAt?: Date | string
     comments?: CommentCreateNestedManyWithoutPostInput
-    college: CollegeCreateNestedOneWithoutPostsInput
+    college?: CollegeCreateNestedOneWithoutPostsInput
+    club?: ClubCreateNestedOneWithoutPostsInput
   }
 
   export type PostUncheckedCreateWithoutUserInput = {
     id?: string
-    collegeId: string
     postUrl?: string | null
     description: string
     createdAt?: Date | string
+    collegeId?: string | null
+    clubId?: string | null
     comments?: CommentUncheckedCreateNestedManyWithoutPostInput
   }
 
@@ -11758,6 +13478,31 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     posts?: PostUncheckedUpdateManyWithoutCollegeNestedInput
+  }
+
+  export type ClubUpsertWithoutUsersInput = {
+    update: XOR<ClubUpdateWithoutUsersInput, ClubUncheckedUpdateWithoutUsersInput>
+    create: XOR<ClubCreateWithoutUsersInput, ClubUncheckedCreateWithoutUsersInput>
+    where?: ClubWhereInput
+  }
+
+  export type ClubUpdateToOneWithWhereWithoutUsersInput = {
+    where?: ClubWhereInput
+    data: XOR<ClubUpdateWithoutUsersInput, ClubUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type ClubUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    posts?: PostUpdateManyWithoutClubNestedInput
+  }
+
+  export type ClubUncheckedUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    posts?: PostUncheckedUpdateManyWithoutClubNestedInput
   }
 
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
@@ -11898,6 +13643,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     college?: CollegeCreateNestedOneWithoutUsersInput
+    club?: ClubCreateNestedOneWithoutUsersInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
@@ -11912,7 +13658,8 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    belongToCampus?: string | null
+    collegeId?: string | null
+    clubId?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
@@ -11940,6 +13687,25 @@ export namespace Prisma {
   export type CollegeCreateOrConnectWithoutPostsInput = {
     where: CollegeWhereUniqueInput
     create: XOR<CollegeCreateWithoutPostsInput, CollegeUncheckedCreateWithoutPostsInput>
+  }
+
+  export type ClubCreateWithoutPostsInput = {
+    id?: string
+    name: string
+    state: string
+    users?: UserCreateNestedManyWithoutClubInput
+  }
+
+  export type ClubUncheckedCreateWithoutPostsInput = {
+    id?: string
+    name: string
+    state: string
+    users?: UserUncheckedCreateNestedManyWithoutClubInput
+  }
+
+  export type ClubCreateOrConnectWithoutPostsInput = {
+    where: ClubWhereUniqueInput
+    create: XOR<ClubCreateWithoutPostsInput, ClubUncheckedCreateWithoutPostsInput>
   }
 
   export type CommentUpsertWithWhereUniqueWithoutPostInput = {
@@ -11979,6 +13745,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     college?: CollegeUpdateOneWithoutUsersNestedInput
+    club?: ClubUpdateOneWithoutUsersNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
@@ -11993,7 +13760,8 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    belongToCampus?: NullableStringFieldUpdateOperationsInput | string | null
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
@@ -12024,22 +13792,49 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutCollegeNestedInput
   }
 
+  export type ClubUpsertWithoutPostsInput = {
+    update: XOR<ClubUpdateWithoutPostsInput, ClubUncheckedUpdateWithoutPostsInput>
+    create: XOR<ClubCreateWithoutPostsInput, ClubUncheckedCreateWithoutPostsInput>
+    where?: ClubWhereInput
+  }
+
+  export type ClubUpdateToOneWithWhereWithoutPostsInput = {
+    where?: ClubWhereInput
+    data: XOR<ClubUpdateWithoutPostsInput, ClubUncheckedUpdateWithoutPostsInput>
+  }
+
+  export type ClubUpdateWithoutPostsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    users?: UserUpdateManyWithoutClubNestedInput
+  }
+
+  export type ClubUncheckedUpdateWithoutPostsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    users?: UserUncheckedUpdateManyWithoutClubNestedInput
+  }
+
   export type PostCreateWithoutCommentsInput = {
     id?: string
     postUrl?: string | null
     description: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutPostsInput
-    college: CollegeCreateNestedOneWithoutPostsInput
+    college?: CollegeCreateNestedOneWithoutPostsInput
+    club?: ClubCreateNestedOneWithoutPostsInput
   }
 
   export type PostUncheckedCreateWithoutCommentsInput = {
     id?: string
-    collegeId: string
     userId: string
     postUrl?: string | null
     description: string
     createdAt?: Date | string
+    collegeId?: string | null
+    clubId?: string | null
   }
 
   export type PostCreateOrConnectWithoutCommentsInput = {
@@ -12057,6 +13852,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     college?: CollegeCreateNestedOneWithoutUsersInput
+    club?: ClubCreateNestedOneWithoutUsersInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     posts?: PostCreateNestedManyWithoutUserInput
@@ -12071,7 +13867,8 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    belongToCampus?: string | null
+    collegeId?: string | null
+    clubId?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     posts?: PostUncheckedCreateNestedManyWithoutUserInput
@@ -12099,16 +13896,18 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPostsNestedInput
-    college?: CollegeUpdateOneRequiredWithoutPostsNestedInput
+    college?: CollegeUpdateOneWithoutPostsNestedInput
+    club?: ClubUpdateOneWithoutPostsNestedInput
   }
 
   export type PostUncheckedUpdateWithoutCommentsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    collegeId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     postUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUpsertWithoutCommentsInput = {
@@ -12132,6 +13931,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     college?: CollegeUpdateOneWithoutUsersNestedInput
+    club?: ClubUpdateOneWithoutUsersNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     posts?: PostUpdateManyWithoutUserNestedInput
@@ -12146,7 +13946,8 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    belongToCampus?: NullableStringFieldUpdateOperationsInput | string | null
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     posts?: PostUncheckedUpdateManyWithoutUserNestedInput
@@ -12158,6 +13959,7 @@ export namespace Prisma {
     postUrl?: string | null
     description: string
     createdAt?: Date | string
+    clubId?: string | null
   }
 
   export type UserCreateManyCollegeInput = {
@@ -12169,6 +13971,7 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    clubId?: string | null
   }
 
   export type PostUpdateWithoutCollegeInput = {
@@ -12178,6 +13981,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUpdateManyWithoutPostNestedInput
     user?: UserUpdateOneRequiredWithoutPostsNestedInput
+    club?: ClubUpdateOneWithoutPostsNestedInput
   }
 
   export type PostUncheckedUpdateWithoutCollegeInput = {
@@ -12186,6 +13990,7 @@ export namespace Prisma {
     postUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
     comments?: CommentUncheckedUpdateManyWithoutPostNestedInput
   }
 
@@ -12195,6 +14000,7 @@ export namespace Prisma {
     postUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUpdateWithoutCollegeInput = {
@@ -12206,6 +14012,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    club?: ClubUpdateOneWithoutUsersNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
@@ -12221,6 +14028,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
@@ -12236,6 +14044,101 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type PostCreateManyClubInput = {
+    id?: string
+    userId: string
+    postUrl?: string | null
+    description: string
+    createdAt?: Date | string
+    collegeId?: string | null
+  }
+
+  export type UserCreateManyClubInput = {
+    id?: string
+    name?: string | null
+    username?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    collegeId?: string | null
+  }
+
+  export type PostUpdateWithoutClubInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    postUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comments?: CommentUpdateManyWithoutPostNestedInput
+    user?: UserUpdateOneRequiredWithoutPostsNestedInput
+    college?: CollegeUpdateOneWithoutPostsNestedInput
+  }
+
+  export type PostUncheckedUpdateWithoutClubInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    postUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    comments?: CommentUncheckedUpdateManyWithoutPostNestedInput
+  }
+
+  export type PostUncheckedUpdateManyWithoutClubInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    postUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserUpdateWithoutClubInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    college?: CollegeUpdateOneWithoutUsersNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    posts?: PostUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutClubInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    posts?: PostUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutClubInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AccountCreateManyUserInput = {
@@ -12268,10 +14171,11 @@ export namespace Prisma {
 
   export type PostCreateManyUserInput = {
     id?: string
-    collegeId: string
     postUrl?: string | null
     description: string
     createdAt?: Date | string
+    collegeId?: string | null
+    clubId?: string | null
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -12364,24 +14268,27 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUpdateManyWithoutPostNestedInput
-    college?: CollegeUpdateOneRequiredWithoutPostsNestedInput
+    college?: CollegeUpdateOneWithoutPostsNestedInput
+    club?: ClubUpdateOneWithoutPostsNestedInput
   }
 
   export type PostUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    collegeId?: StringFieldUpdateOperationsInput | string
     postUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
     comments?: CommentUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type PostUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    collegeId?: StringFieldUpdateOperationsInput | string
     postUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collegeId?: NullableStringFieldUpdateOperationsInput | string | null
+    clubId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CommentCreateManyPostInput = {

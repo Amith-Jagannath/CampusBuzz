@@ -10,6 +10,15 @@ export async function getColleges() {
   });
   return colleges;
 }
+export async function getClubs() {
+  const clubs = await prisma.club.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  });
+  return clubs;
+}
+
 
 export async function addUserToCampus(
   collegeName: string,
@@ -35,16 +44,41 @@ export async function addUserToCampus(
   });
   console.log("User updated:", res);
 }
+export async function addUserToClub(
+  clubName: string,
+  username: string,
+  userId: string | undefined
+) {
+  console.log(clubName);
+  const clubId = await prisma.club.findUnique({
+    where: { name: clubName },
+    select: { id: true },
+  });
+
+  if (!clubId) {
+    throw new Error("Club not found");
+  }
+
+  const res = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      club: { connect: { id: clubId.id } }, // use the relation field
+      username: username,
+    },
+  });
+  console.log("User updated:", res);
+  return res;
+}
 
 export async function Belongstocampus(userId: string | undefined) {
   if (!userId) return false;
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { belongToCampus: true },
+    select: { collegeId: true },
   });
 
-  return user?.belongToCampus;
+  return user?.collegeId;
 }
 
 export async function getCollegeIdByUserId(userId: string | undefined) {
@@ -52,10 +86,10 @@ export async function getCollegeIdByUserId(userId: string | undefined) {
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { belongToCampus: true },
+    select: { collegeId: true },
   });
-  console.log("User's college ID:", user?.belongToCampus);
-  return user?.belongToCampus || null;
+  console.log("User's college ID:", user?.collegeId);
+  return user?.collegeId || null;
 }
 export async function createPost(
   userId: string | undefined,
@@ -139,3 +173,16 @@ export async function EditUserBio(
 
   return updatedUser;
 }
+
+export async function WhetherUserBelongsOtherThanClub(userId: string | undefined) {
+  if (!userId) return false;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { collegeId: true },
+  });
+  
+  return user?.collegeId || "NOT_FOUND";
+}
+
+

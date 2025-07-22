@@ -203,7 +203,7 @@ const MainContent = ({ InsideCampus }: MainContentProps) => {
               </nav>
             </aside> */}
 
-           <LoggedInPage />
+           <LoggedInPage userId={session?.user.id || ""} />
             {/* {InsideCampus ? <CampusMainPage /> : <Home />} */}
           </div>
         

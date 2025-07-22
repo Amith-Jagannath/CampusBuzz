@@ -149,6 +149,12 @@ exports.Prisma.CollegeScalarFieldEnum = {
   state: 'state'
 };
 
+exports.Prisma.ClubScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  state: 'state'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -158,7 +164,8 @@ exports.Prisma.UserScalarFieldEnum = {
   image: 'image',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  belongToCampus: 'belongToCampus'
+  collegeId: 'collegeId',
+  clubId: 'clubId'
 };
 
 exports.Prisma.VerificationRequestScalarFieldEnum = {
@@ -172,11 +179,12 @@ exports.Prisma.VerificationRequestScalarFieldEnum = {
 
 exports.Prisma.PostScalarFieldEnum = {
   id: 'id',
-  collegeId: 'collegeId',
   userId: 'userId',
   postUrl: 'postUrl',
   description: 'description',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  collegeId: 'collegeId',
+  clubId: 'clubId'
 };
 
 exports.Prisma.CommentScalarFieldEnum = {
@@ -207,6 +215,7 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Session: 'Session',
   College: 'College',
+  Club: 'Club',
   User: 'User',
   VerificationRequest: 'VerificationRequest',
   Post: 'Post',

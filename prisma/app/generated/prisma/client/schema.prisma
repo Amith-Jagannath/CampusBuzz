@@ -43,21 +43,31 @@ model College {
   users User[] @relation("CollegeToUsers")
 }
 
+model Club {
+  id    String @id @default(uuid())
+  name  String @unique
+  state String
+  posts Post[]
+  users User[] @relation("ClubToUsers")
+}
+
 model User {
-  id             String    @id @default(cuid())
-  name           String?
-  username       String?   @unique
-  email          String?   @unique
-  emailVerified  DateTime?
-  image          String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  belongToCampus String?
-  college        College?  @relation("CollegeToUsers", fields: [belongToCampus], references: [id])
-  accounts       Account[]
-  sessions       Session[]
-  comments       Comment[]
-  posts          Post[]
+  id            String    @id @default(cuid())
+  name          String?
+  username      String?   @unique
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  collegeId     String?
+  college       College?  @relation("CollegeToUsers", fields: [collegeId], references: [id])
+  clubId        String?
+  club          Club?     @relation("ClubToUsers", fields: [clubId], references: [id])
+  accounts      Account[]
+  sessions      Session[]
+  comments      Comment[]
+  posts         Post[]
 }
 
 model VerificationRequest {
@@ -72,15 +82,18 @@ model VerificationRequest {
 }
 
 model Post {
-  id          String    @id @default(uuid())
-  collegeId   String
+  id String @id @default(uuid())
+
   userId      String
   postUrl     String?
   description String
   createdAt   DateTime  @default(now())
   comments    Comment[]
   user        User      @relation(fields: [userId], references: [id])
-  college     College   @relation(fields: [collegeId], references: [id])
+  collegeId   String?
+  college     College?  @relation(fields: [collegeId], references: [id])
+  clubId      String?
+  club        Club?     @relation(fields: [clubId], references: [id])
 }
 
 model Comment {

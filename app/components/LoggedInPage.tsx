@@ -3,6 +3,7 @@ import CreatePostCard from "./CreatePost";
 // Assuming these are server-side functions
 import Home from "./Home"; // Assuming you have a Home component for the home feed
 import CampusPage from "./CampusPage";
+import Club from "./ClubPage"; // Assuming you have a Club component for club feed
 
 // Define the Post type for better type safety
 type Post = {
@@ -28,17 +29,25 @@ type Post = {
   }[];
 };
 
-const LoggedInPage = () => {
+const LoggedInPage = ({ userId }: { userId: string }) => {
   const [home, setHome] = useState(true);
   const [campus, setCampus] = useState(false);
+  const [club,setClub] = useState(false);
 
   const handleHomeTabClick = () => {
     setHome(true);
     setCampus(false);
+    setClub(false);
   };
   const handleCampusTabClick = () => {
     setHome(false);
     setCampus(true);
+    setClub(false);
+  };
+  const handleClubTabClick = () => {
+    setHome(false);
+    setCampus(false);
+    setClub(true);
   };
   return (
     <main className="flex-1 lg:ml-64 lg:mr-80 p-4 md:p-6 space-y-6 min-h-screen bg-black text-white font-sans">
@@ -62,11 +71,21 @@ const LoggedInPage = () => {
         >
           Campus chat
         </button>
+
+        <button
+          onClick={handleClubTabClick}
+          className={`m-2.5 text-gray-400 hover:text-white pb-2 border-b-2 transition-all hover:cursor-pointer ${
+            club ? "border-purple-500 text-white" : "border-transparent"
+          }`}
+        >
+          Club
+        </button>
       </div>
 
       {/* Posts Feed */}
       {home && <Home />}
-      {campus && <CampusPage />}
+      {campus && <CampusPage />}\
+      {club && <Club userId = {userId}/>}
     </main>
   );
 };
