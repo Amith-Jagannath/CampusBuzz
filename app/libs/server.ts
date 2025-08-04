@@ -91,6 +91,17 @@ export async function getCollegeIdByUserId(userId: string | undefined) {
   console.log("User's college ID:", user?.collegeId);
   return user?.collegeId || null;
 }
+
+export async function getClubIdByUserId(userId: string | undefined) {
+  if (!userId) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { clubId: true },
+  });
+  console.log("User's club ID:", user?.clubId);
+  return user?.clubId || null;
+}
 export async function createPost(
   userId: string | undefined,
   description: string,
@@ -117,6 +128,30 @@ export async function getPostsByCollegeId(collegeId: string | null) {
 
   const posts = await prisma.post.findMany({
     where: { collegeId },
+    include: {
+      user: {
+        select: { username: true, image: true },
+      },
+      comments: {
+        include: {
+          user: {
+            select: { username: true, image: true },
+          },
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return posts;
+}
+export async function getPostsByClubId(clubId: string | null) {
+  if (!clubId) return [];
+
+  const posts = await prisma.post.findMany({
+    where: { clubId },
     include: {
       user: {
         select: { username: true, image: true },
@@ -185,4 +220,26 @@ export async function WhetherUserBelongsOtherThanClub(userId: string | undefined
   return user?.collegeId || "NOT_FOUND";
 }
 
+export async function BelongsToCollegeOrNot(userId: string | undefined) {
+  if (!userId) return false;
 
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { collegeId: true },
+  });
+  console.log("Belongs to college:", user?.collegeId);
+if(user?.collegeId) return true;
+else return false;
+}
+
+export async function BelongsToClubOrNot(userId: string | undefined) {
+  if (!userId) return false;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { clubId: true },
+  });
+  console.log("Belongs to club:", user?.clubId);
+if(user?.clubId) return true;
+else return false;
+}

@@ -3,12 +3,16 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Join from "./Join";
+
 import {
   AddCommentToPost,
+ 
+  BelongsToCollegeOrNot,
  
   getCollegeIdByUserId,
   getPostsByCollegeId,
 } from "../libs/server";
+import { GenerateRandomUsername } from "../utils/generateUsername";
 type Post = {
   id: string;
   description: string;
@@ -38,6 +42,7 @@ const CampusPage = () => {
   const [campus, setCampus] = useState(false);
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({});
   const [join, setJoin] = useState(false);
+  const [username, setUsername] = useState("");
 
   const [expandedPosts, setExpandedPosts] = useState<Record<string, boolean>>(
     {}
@@ -126,13 +131,6 @@ const CampusPage = () => {
   // Fetch posts when the session changes or component mounts
   useEffect(
     () => () => {
-      // const getCampusOrClub = async () => {
-      //   const res = await BelongToCampusORClub(session?.user?.id);
-      //   console.log("Inside campus or club",res);
-      //   if(res=='NOT_FOUND'){
-      //     setJoin(true);
-      //   }
-      // };
       const getAllPosts = async () => {
         if (!session?.user?.id) {
           setLoading(false);
@@ -185,8 +183,21 @@ const CampusPage = () => {
           setLoading(false);
         }
       };
-      // getCampusOrClub();
-      getAllPosts();
+      const CollegeCheck= async()=>{
+       const res = await BelongsToCollegeOrNot(session?.user?.id);
+       console.log("userid:", session?.user?.id);
+       console.log("User belongs to college:", res);
+       if(res){
+         getAllPosts();
+       }else{
+         setLoading(false);
+         const username = await  GenerateRandomUsername();
+         setUsername(username);
+         setJoin(true);
+       }
+      }      
+      CollegeCheck();
+      
     },
     [session]
   ); // Dependency array includes session to refetch if session changes
@@ -215,7 +226,7 @@ const CampusPage = () => {
     setCampus(true);
   };
  return join ? (
-  <Join />
+  <Join belongsTo='college' userId={session?.user?.id|| ''} username_param={username} />
 ) : (
   <section className="space-y-6 pb-6">
     {posts.length === 0 ? (
