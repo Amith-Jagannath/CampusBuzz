@@ -53,7 +53,7 @@ const LoggedInPage = ({ userId }: { userId: string }) => {
     <main className="flex-1 lg:ml-64 lg:mr-80 p-4 md:p-6 space-y-6 min-h-screen bg-black text-white font-sans">
       {/* Create Post Card */}
 
-      <CreatePostCard />
+      
       <div className="flex space-x-6 border-b border-gray-700 mb-6 text-sm font-medium">
         <button
           onClick={handleHomeTabClick}
@@ -81,6 +81,7 @@ const LoggedInPage = ({ userId }: { userId: string }) => {
           Club
         </button>
       </div>
+     
 
       {/* Posts Feed */}
       {home && <Home />}

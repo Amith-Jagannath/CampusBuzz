@@ -2,9 +2,14 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { getCollegeIdByUserId, createPost } from "../libs/server";
+import {
+  getCollegeIdByUserId,
+  getClubIdByUserId,
+  createPostForCollege,
+  createPostForClub,
+} from "../libs/server";
 
-export default function CreatePostCard() {
+export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -40,9 +45,19 @@ export default function CreatePostCard() {
       imageUrl = data.autoCropUrl;
       if (!imageUrl) return;
     }
-
-    const collegeId = await getCollegeIdByUserId(session?.user.id);
-    await createPost(session?.user.id, description, imageUrl, collegeId);
+    if (belongsTo == "college") {
+      const collegeId = await getCollegeIdByUserId(session?.user.id);
+      await createPostForCollege(
+        session?.user.id,
+        description,
+        imageUrl,
+        collegeId
+      );
+    }
+    if (belongsTo == "club") {
+      const clubId = await getClubIdByUserId(session?.user.id);
+      await createPostForClub(session?.user.id, description, imageUrl, clubId);
+    }
 
     setIsModalOpen(false);
     setDescription("");
@@ -51,8 +66,8 @@ export default function CreatePostCard() {
 
   return (
     <div className="bg-[#0f0f0f] rounded-xl p-6 shadow-md mb-4">
-      <p className="text-sm text-gray-400 mb-2">11:54 AM</p>
-      <h2 className="text-xl font-semibold text-white mb-4">Ask Anything...</h2>
+      {/* <p className="text-sm text-gray-400 mb-2">11:54 AM</p>
+      <h2 className="text-xl font-semibold text-white mb-4">Ask Anything...</h2> */}
 
       <button
         onClick={() => setIsModalOpen(true)}

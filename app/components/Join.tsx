@@ -73,7 +73,7 @@ const Join = ({ belongsTo, userId ,username_param }: { userId: string, belongsTo
             type="text"
             className="w-full p-2 rounded-lg bg-zinc-900 text-white placeholder-gray-500 outline-none border border-zinc-700 mb-4"
             onChange={(e) => setUsername(e.target.value)}
-            value={username_param}
+            value={username}
             placeholder="Enter a nickname"
           />
 

@@ -19,7 +19,6 @@ export async function getClubs() {
   return clubs;
 }
 
-
 export async function addUserToCampus(
   collegeName: string,
   username: string,
@@ -102,7 +101,7 @@ export async function getClubIdByUserId(userId: string | undefined) {
   console.log("User's club ID:", user?.clubId);
   return user?.clubId || null;
 }
-export async function createPost(
+export async function createPostForCollege(
   userId: string | undefined,
   description: string,
   postUrl: string | null,
@@ -121,10 +120,28 @@ export async function createPost(
 
   return post;
 }
+export async function createPostForClub(
+  userId: string | undefined,
+  description: string,
+  postUrl: string | null,
+  clubId: string | null
+) {
+  if (!userId || !clubId) return;
+
+  const post = await prisma.post.create({
+    data: {
+      description,
+      postUrl,
+      user: { connect: { id: userId } },
+      club: { connect: { id: clubId } },
+    },
+  });
+
+  return post;
+}
 
 export async function getPostsByCollegeId(collegeId: string | null) {
   if (!collegeId) return [];
-  
 
   const posts = await prisma.post.findMany({
     where: { collegeId },
@@ -172,7 +189,6 @@ export async function getPostsByClubId(clubId: string | null) {
   return posts;
 }
 
-
 export async function AddCommentToPost(
   postId: string,
   userId: string | undefined,
@@ -209,14 +225,16 @@ export async function EditUserBio(
   return updatedUser;
 }
 
-export async function WhetherUserBelongsOtherThanClub(userId: string | undefined) {
+export async function WhetherUserBelongsOtherThanClub(
+  userId: string | undefined
+) {
   if (!userId) return false;
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { collegeId: true },
   });
-  
+
   return user?.collegeId || "NOT_FOUND";
 }
 
@@ -228,8 +246,8 @@ export async function BelongsToCollegeOrNot(userId: string | undefined) {
     select: { collegeId: true },
   });
   console.log("Belongs to college:", user?.collegeId);
-if(user?.collegeId) return true;
-else return false;
+  if (user?.collegeId) return true;
+  else return false;
 }
 
 export async function BelongsToClubOrNot(userId: string | undefined) {
@@ -240,6 +258,6 @@ export async function BelongsToClubOrNot(userId: string | undefined) {
     select: { clubId: true },
   });
   console.log("Belongs to club:", user?.clubId);
-if(user?.clubId) return true;
-else return false;
+  if (user?.clubId) return true;
+  else return false;
 }

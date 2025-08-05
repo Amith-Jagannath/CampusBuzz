@@ -13,6 +13,7 @@ import {
   getPostsByCollegeId,
 } from "../libs/server";
 import { GenerateRandomUsername } from "../utils/generateUsername";
+import CreatePostCard from "./CreatePost";
 type Post = {
   id: string;
   description: string;
@@ -228,6 +229,7 @@ const CampusPage = () => {
  return join ? (
   <Join belongsTo='college' userId={session?.user?.id|| ''} username_param={username} />
 ) : (
+ <> <CreatePostCard belongsTo='college'/>
   <section className="space-y-6 pb-6">
     {posts.length === 0 ? (
       <div className="text-center text-gray-400 py-10">
@@ -417,7 +419,7 @@ const CampusPage = () => {
         );
       })
     )}
-  </section>
+  </section></>
 );
  
 }

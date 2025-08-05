@@ -7,6 +7,7 @@ import  Join  from './Join';
 import { AddCommentToPost } from '../libs/server';
 import { addUserToClub } from '../libs/server';
 import { useSession } from 'next-auth/react';
+import CreatePostCard from './CreatePost';
 type Post = {
   id: string;
   description: string;
@@ -194,6 +195,7 @@ const ClubPage = ({ userId }: { userId: string }) => {
  return join ? (
   <Join belongsTo='club' userId={session?.user?.id|| ''} username_param={username} />
 ) : (
+  <><CreatePostCard belongsTo='club' />
   <section className="space-y-6 pb-6">
     {posts.length === 0 ? (
       <div className="text-center text-gray-400 py-10">
@@ -383,7 +385,7 @@ const ClubPage = ({ userId }: { userId: string }) => {
         );
       })
     )}
-  </section>
+  </section></>
 );
  
 }
