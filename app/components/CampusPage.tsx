@@ -33,6 +33,7 @@ type Post = {
     // Assuming comment also has a user, or we'll display "Anonymous"
     user?: {
       username: string;
+      image?: string;
     };
   }[];
 };
@@ -100,26 +101,27 @@ const CampusPage = () => {
 
     // Optimistically update the UI
     setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId
-          ? {
-              ...post,
-              comments: [
-                ...post.comments,
-                {
-                  id: crypto.randomUUID(), // Unique ID for the new comment
-                  postId,
-                  userId: session?.user?.id ?? "unknown",
-                  description: commentText,
-                  user: {
-                    username: session?.user?.name ?? "Anonymous", // Use session username or Anonymous
-                  },
-                },
-              ],
-            }
-          : post
-      )
-    );
+  prevPosts.map((post) =>
+    post.id === postId
+      ? {
+          ...post,
+          comments: [
+            {
+              id: crypto.randomUUID(), // Unique ID for the new comment
+              postId,
+              userId: session?.user?.id ?? "unknown",
+              description: commentText,
+              user: {
+                username: session?.user?.username ?? "Anonymous",
+                image: session?.user?.image || "/default-avatar.png", // Fallback image
+              },
+            },
+            ...post.comments, // <-- new comment first
+          ],
+        }
+      : post
+  )
+);
 
     // Clear the comment input and hide the comment box
     setNewComments((prev) => ({ ...prev, [postId]: "" }));
@@ -170,7 +172,8 @@ const CampusPage = () => {
               userId: comment.userId,
               description: comment.description,
               user: {
-                username: comment.user?.username?.trim() ?? "Anonymous", // Assume comment also has a user
+                username: comment.user?.username?.trim() ?? "Anonymous",
+                image: comment.user?.image ?? "/default-avatar.png",  // Assume comment also has a user
               },
             })),
           }));
@@ -373,7 +376,7 @@ const CampusPage = () => {
                     className="text-sm text-gray-300 bg-black p-1 rounded-lg flex items-start gap-3"
                   >
                     <Image
-                      src="/default-avatar.png"
+                      src={comment.user?.image || "/default-avatar.png"}
                       alt="Commenter Avatar"
                       className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                       width={32}

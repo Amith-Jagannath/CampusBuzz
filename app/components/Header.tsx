@@ -77,7 +77,7 @@ const Header = () => {
           {status === "authenticated" && (
             <button
               onClick={() => setIsOpen(true)}
-              className="text-white focus:outline-none"
+              className="text-white focus:outline-none hover:cursor-pointer"
             >
               <svg
                 className="w-7 h-7"
@@ -115,7 +115,7 @@ const Header = () => {
           <h2 className="text-lg font-semibold">Profile</h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="text-white text-xl"
+            className="text-white text-xl hover:cursor-pointer"
           >
             ✕
           </button>
@@ -130,26 +130,26 @@ const Header = () => {
               className="rounded-full border-2 border-purple-600"
             />
             <p className="text-lg font-medium">
-              {session?.user?.name || "User"}
+              {session?.user?.username || "User"}
             </p>
           </div>
 
           <div className="mt-6 space-y-3">
             <button
-              className="w-full text-left px-4 py-2 rounded hover:bg-white/10 transition"
+              className="w-full text-left px-4 py-2 rounded hover:bg-white/10 transition hover:cursor-pointer"
               onClick={OpenEditModal}
             >
               ✏️ Edit Profile
             </button>
-            <button className="w-full text-left px-4 py-2 rounded hover:bg-white/10 transition">
+            {/* <button className="w-full text-left px-4 py-2 rounded hover:bg-white/10 transition">
               🖼️ Change Image
-            </button>
+            </button> */}
             <button className="w-full text-left px-4 py-2 rounded hover:bg-white/10 transition">
               ⚙️ Settings
             </button>
             <button
               onClick={() => signOut()}
-              className="w-full text-left px-4 py-2 rounded text-red-400 hover:bg-white/10 transition"
+              className="w-full text-left px-4 py-2 rounded text-red-400 hover:bg-white/10 transition hover:cursor-pointer"
             >
               🚪 Sign Out
             </button>
@@ -197,7 +197,7 @@ const Header = () => {
 
               <button
                 onClick={handleEditPost}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm opacity-70 cursor-not-allowed"
+                className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-lg text-sm opacity-70 hover:cursor-pointer"
               >
                 Next
               </button>

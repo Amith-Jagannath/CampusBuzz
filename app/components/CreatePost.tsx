@@ -98,14 +98,12 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
               rows={2}
             />
 
-            <p className="text-sm text-gray-500 mb-4">
-              Add more details... (optional)
-            </p>
+           
 
             <div className="border-t border-zinc-800 pt-4 flex flex-wrap justify-between items-center">
               <div className="flex gap-4 text-gray-400 text-xl">
                 <label htmlFor="file-upload" className="cursor-pointer">
-                  <span>🖼️</span>
+                  <span>🖼️</span><span>(optional)</span>
                   <input
                     id="file-upload"
                     type="file"

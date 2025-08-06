@@ -85,7 +85,7 @@ const LoggedInPage = ({ userId }: { userId: string }) => {
 
       {/* Posts Feed */}
       {home && <Home />}
-      {campus && <CampusPage />}\
+      {campus && <CampusPage />}
       {club && <Club userId = {userId}/>}
     </main>
   );

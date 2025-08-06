@@ -150,6 +150,7 @@ export async function getPostsByCollegeId(collegeId: string | null) {
         select: { username: true, image: true },
       },
       comments: {
+        orderBy: { createdAt: "desc" },
         include: {
           user: {
             select: { username: true, image: true },
