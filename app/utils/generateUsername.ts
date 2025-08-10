@@ -1,4 +1,5 @@
 // app/utils/generateUsername.ts
+import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 export async function GenerateRandomUsername() {
   const res = await fetch("/api/gemini", {
     method: "POST",
@@ -9,4 +10,13 @@ export async function GenerateRandomUsername() {
   });
   const data = await res.json();
   return data.result;
+}
+
+export function GenerateRandomUsernameLocal() {
+  return uniqueNamesGenerator({
+    dictionaries: [adjectives, animals],
+    separator: '',
+    style: 'capital',
+    length: 2
+  }) + Math.floor(Math.random() * 1000);
 }

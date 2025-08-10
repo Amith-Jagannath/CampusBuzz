@@ -29,7 +29,7 @@ export async function addUserToCampus(
     where: { name: collegeName },
     select: { id: true },
   });
-
+ 
   if (!collegeId) {
     throw new Error("College not found");
   }

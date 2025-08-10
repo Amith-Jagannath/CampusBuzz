@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import CreatePostCard from "./CreatePost";
 // Assuming these are server-side functions
 import Home from "./Home"; // Assuming you have a Home component for the home feed
-import CampusPage from "./CampusPage";
+
+import CampusPage from "./CampusPage"; // Assuming you have a CampusPage component for campus feed
 import Club from "./ClubPage"; // Assuming you have a Club component for club feed
 
 // Define the Post type for better type safety
@@ -57,7 +58,7 @@ const LoggedInPage = ({ userId }: { userId: string }) => {
       <div className="flex space-x-6 border-b border-gray-700 mb-6 text-sm font-medium">
         <button
           onClick={handleHomeTabClick}
-          className={`m-2.5 text-gray-400 hover:text-white pb-2 border-b-2 transition-all hover:cursor-pointer ${
+          className={` text-gray-400 hover:text-white pb-2 border-b-2 transition-all hover:cursor-pointer ${
             home ? "border-purple-500 text-white" : "border-transparent"
           }`}
         >
@@ -69,12 +70,12 @@ const LoggedInPage = ({ userId }: { userId: string }) => {
             campus ? "border-purple-500 text-white" : "border-transparent"
           }`}
         >
-          Campus chat
+          Campus
         </button>
 
         <button
           onClick={handleClubTabClick}
-          className={`m-2.5 text-gray-400 hover:text-white pb-2 border-b-2 transition-all hover:cursor-pointer ${
+          className={` text-gray-400 hover:text-white pb-2 border-b-2 transition-all hover:cursor-pointer ${
             club ? "border-purple-500 text-white" : "border-transparent"
           }`}
         >
