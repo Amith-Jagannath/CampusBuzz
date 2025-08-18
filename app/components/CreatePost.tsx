@@ -14,10 +14,12 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
   const [image, setImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
+  const [postError, setPostError] = useState("");
+  const [isPosting, setIsPosting] = useState(false);
   const { data: session } = useSession();
 
-  const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       setImage(URL.createObjectURL(file));
       setImageFile(file);
@@ -33,42 +35,60 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
     });
 
   const handlePost = async () => {
-    let imageUrl;
-    if (imageFile) {
-      const base64 = await convertToBase64(imageFile);
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64 }),
-      });
-      const data = await res.json();
-      imageUrl = data.autoCropUrl;
-      if (!imageUrl) return;
+    if (!description.trim()) {
+      setPostError("Please enter a description before posting.");
+      return;
     }
-    if (belongsTo == "college") {
-      const collegeId = await getCollegeIdByUserId(session?.user.id);
-      await createPostForCollege(
-        session?.user.id,
-        description,
-        imageUrl,
-        collegeId
-      );
-    }
-    if (belongsTo == "club") {
-      const clubId = await getClubIdByUserId(session?.user.id);
-      await createPostForClub(session?.user.id, description, imageUrl, clubId);
-    }
+    setPostError("");
+    setIsPosting(true);
 
-    setIsModalOpen(false);
-    setDescription("");
-    setImage(null);
+    try {
+      let imageUrl;
+      if (imageFile) {
+        const base64 = await convertToBase64(imageFile);
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: base64 }),
+        });
+        const data = await res.json();
+        imageUrl = data.autoCropUrl;
+        if (!imageUrl) throw new Error("Image upload failed");
+      }
+
+      if (belongsTo === "college") {
+        const collegeId = await getCollegeIdByUserId(session?.user.id);
+        console.log("creating post for college:",collegeId)
+        await createPostForCollege(
+          session?.user.id,
+          description,
+          imageUrl,
+          collegeId
+        );
+      }
+      if (belongsTo === "club") {
+        const clubId = await getClubIdByUserId(session?.user.id);
+        await createPostForClub(
+          session?.user.id,
+          description,
+          imageUrl,
+          clubId
+        );
+      }
+
+      setIsModalOpen(false);
+      setDescription("");
+      setImage(null);
+      setImageFile(null);
+    } catch {
+      setPostError("Something went wrong while posting. Please try again.");
+    } finally {
+      setIsPosting(false);
+    }
   };
 
   return (
     <div className="bg-[#0f0f0f] rounded-xl p-6 shadow-md mb-4">
-      {/* <p className="text-sm text-gray-400 mb-2">11:54 AM</p>
-      <h2 className="text-xl font-semibold text-white mb-4">Ask Anything...</h2> */}
-
       <button
         onClick={() => setIsModalOpen(true)}
         className="w-full bg-[#1a1a1a] text-gray-400 text-left px-4 py-3 rounded-lg hover:bg-[#2a2a2a] transition"
@@ -90,6 +110,10 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
               Create a Post <span className="text-green-500">✔</span>
             </h3>
 
+            {postError && (
+              <div className="mb-4 text-red-400 text-sm">{postError}</div>
+            )}
+
             <textarea
               className="w-full bg-transparent text-white placeholder-gray-500 text-lg font-medium outline-none resize-none mb-2"
               placeholder="What would you like to share?"
@@ -98,12 +122,11 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
               rows={2}
             />
 
-           
-
             <div className="border-t border-zinc-800 pt-4 flex flex-wrap justify-between items-center">
               <div className="flex gap-4 text-gray-400 text-xl">
                 <label htmlFor="file-upload" className="cursor-pointer">
-                  <span>🖼️</span><span>(optional)</span>
+                  <span>🖼️</span>
+                  <span>(optional)</span>
                   <input
                     id="file-upload"
                     type="file"
@@ -112,17 +135,18 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
                     className="hidden"
                   />
                 </label>
-                {/* <span>🎬</span>
-                <span>🔗</span>
-                <span>📋</span>
-                <span>😊</span> */}
               </div>
 
               <button
                 onClick={handlePost}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm opacity-70 cursor-not-allowed"
+                className={`px-4 py-2 rounded-lg text-sm text-white ${
+                  isPosting
+                    ? "bg-purple-400 cursor-not-allowed"
+                    : "bg-purple-500 hover:bg-purple-600"
+                }`}
+                disabled={isPosting}
               >
-                Next
+                {isPosting ? "Posting..." : "Next"}
               </button>
             </div>
 

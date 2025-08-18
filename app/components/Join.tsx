@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { addUserToCampus, addUserToClub, getClubs, getColleges } from '../libs/server';
-import { GenerateRandomUsername } from '../utils/generateUsername';
+import React, { useState, useEffect } from "react";
+import { addUserToCampus, addUserToClub, getClubs, getColleges } from "../libs/server";
 
 type JoinProps = {
   userId: string;
@@ -13,10 +12,13 @@ type JoinProps = {
 const Join = ({ belongsTo, userId, username_param, onClose, onJoined }: JoinProps) => {
   const [showModal, setShowModal] = useState(true);
   const [items, setDropDownItems] = useState<{ id: string; name: string }[]>([]);
-  const [item, setItem] = useState("");
+  const [search, setSearch] = useState("");
+  const [selectedItem, setSelectedItem] = useState("");
   const [username, setUsername] = useState(username_param);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  // Close modal and notify parent
   const closeModal = () => {
     setShowModal(false);
     onClose();
@@ -24,10 +26,10 @@ const Join = ({ belongsTo, userId, username_param, onClose, onJoined }: JoinProp
 
   useEffect(() => {
     const fetchItems = async () => {
-      if (belongsTo === 'college') {
+      if (belongsTo === "college") {
         const res = await getColleges();
         setDropDownItems(res.map((item: any) => ({ id: item.id, name: item.name })));
-      } else if (belongsTo === 'club') {
+      } else if (belongsTo === "club") {
         const res = await getClubs();
         setDropDownItems(res.map((item: any) => ({ id: item.id, name: item.name })));
       }
@@ -36,16 +38,37 @@ const Join = ({ belongsTo, userId, username_param, onClose, onJoined }: JoinProp
   }, [belongsTo]);
 
   const handleJoin = async () => {
-    if (belongsTo === 'college') {
-      await addUserToCampus(item, username, userId);
+    if (!username.trim()) {
+      setErrorMsg("Please enter a username.");
+      return;
     }
-    if (belongsTo === 'club') {
-      await addUserToClub(item, username, userId);
+    if (!selectedItem.trim()) {
+      setErrorMsg(`Please choose a ${belongsTo}.`);
+      return;
     }
-    setShowModal(false);
-    onClose();
-    onJoined();
+    setErrorMsg("");
+    setIsJoining(true);
+
+    try {
+      if (belongsTo === "college") {
+        await addUserToCampus(selectedItem, username, userId);
+      }
+      if (belongsTo === "club") {
+        await addUserToClub(selectedItem, username, userId);
+      }
+      setShowModal(false);
+      onJoined();
+    } catch (error) {
+      setErrorMsg("An error occurred. Please try again.");
+    } finally {
+      setIsJoining(false);
+      onClose();
+    }
   };
+
+  const filteredItems = items.filter((i) =>
+    i.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <>
@@ -55,7 +78,6 @@ const Join = ({ belongsTo, userId, username_param, onClose, onJoined }: JoinProp
             className="bg-[#121212] text-white w-full max-w-md rounded-2xl p-6 relative border border-zinc-800"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Optional close button */}
             <button
               className="absolute top-3 right-4 text-gray-400 text-2xl hover:text-white"
               onClick={closeModal}
@@ -67,6 +89,8 @@ const Join = ({ belongsTo, userId, username_param, onClose, onJoined }: JoinProp
               Enter Details <span className="text-green-500">✔</span>
             </h2>
 
+            {errorMsg && <div className="mb-4 text-red-400 text-sm">{errorMsg}</div>}
+
             {/* Anonymous Name */}
             <label className="block mb-1 text-sm text-gray-400">Anonymous Name</label>
             <input
@@ -77,35 +101,61 @@ const Join = ({ belongsTo, userId, username_param, onClose, onJoined }: JoinProp
               placeholder="Enter a nickname"
             />
 
-            {/* Club/College Selection */}
+            {/* Searchable Club/College */}
             <label className="block mb-1 text-sm text-gray-400">{`Select ${belongsTo}`} </label>
-            <select
-              id="clubselect"
-              className="w-full p-2 rounded-lg bg-zinc-900 text-white outline-none border border-zinc-700 mb-6"
-              onChange={(e) => setItem(e.target.value)}
-              value={item}
-            >
-              <option value="">{`Choose ${belongsTo}`}</option>
-              {items.map((item) => (
-                <option key={item.id} value={item.name}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
+            <div className="relative mb-6">
+              <input
+                type="text"
+                value={search || selectedItem}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setSelectedItem("");
+                  setShowDropdown(true);
+                }}
+                onFocus={() => setShowDropdown(true)}
+                placeholder={`Search ${belongsTo}`}
+                className="w-full p-2 rounded-lg bg-zinc-900 text-white outline-none border border-zinc-700"
+              />
+              {showDropdown && filteredItems.length > 0 && (
+                <ul className="absolute w-full bg-zinc-900 border border-zinc-700 rounded-lg mt-1 max-h-40 overflow-y-auto z-50">
+                  {filteredItems.map((i) => (
+                    <li
+                      key={i.id}
+                      onClick={() => {
+                        setSelectedItem(i.name);
+                        setSearch(i.name);
+                        setShowDropdown(false);
+                      }}
+                      className="px-3 py-2 cursor-pointer hover:bg-zinc-800"
+                    >
+                      {i.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             {/* Buttons */}
             <div className="flex justify-end gap-3">
               <button
                 onClick={closeModal}
                 className="bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded-lg text-sm"
+                disabled={isJoining}
               >
                 Cancel
               </button>
               <button
-                className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm"
+                className={`px-4 py-2 rounded-lg text-sm ${
+                  isJoining
+                    ? "bg-purple-400 cursor-not-allowed"
+                    : "bg-purple-500 hover:bg-purple-600"
+                } text-white`}
                 onClick={handleJoin}
+                disabled={isJoining}
               >
-                Join {belongsTo.charAt(0).toUpperCase() + belongsTo.slice(1)}
+                {isJoining
+                  ? "Joining..."
+                  : `Join ${belongsTo.charAt(0).toUpperCase() + belongsTo.slice(1)}`}
               </button>
             </div>
           </div>

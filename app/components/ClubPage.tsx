@@ -1,18 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { BelongsToClubOrNot, getClubIdByUserId, getPostsByClubId } from '../libs/server';
-import { GenerateRandomUsername, GenerateRandomUsernameLocal } from '../utils/generateUsername';
-import Image from 'next/image';
-import Join from './Join';
-import { AddCommentToPost } from '../libs/server';
-import CreatePostCard from './CreatePost';
-import { useSession } from 'next-auth/react';
+import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Join from "./Join";
+import {
+  AddCommentToPost,
+  BelongsToClubOrNot,
+  getClubIdByUserId,
+  getPostsByClubId,
+} from "../libs/server";
+import {
+  GenerateRandomUsername,
+  GenerateRandomUsernameLocal,
+} from "../utils/generateUsername";
+import CreatePostCard from "./CreatePost";
 
 type Post = {
   id: string;
   description: string;
   postUrl: string | null;
   createdAt: Date;
-  collegeId: string;
+  ClubId: string;
   userId: string;
   user: {
     username: string;
@@ -25,111 +32,29 @@ type Post = {
     description: string;
     user?: {
       username: string;
+      image?: string;
     };
   }[];
 };
 
-const ClubPage = ({ userId }: { userId: string }) => {
+const CampusPage = () => {
   const { data: session } = useSession();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [join, setJoin] = useState(false);
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({});
-  const [expandedPosts, setExpandedPosts] = useState<Record<string, boolean>>({});
-  const [showCommentBox, setShowCommentBox] = useState<Record<string, boolean>>({});
-  const [newComments, setNewComments] = useState<Record<string, string>>({});
-  const [Joined, setJoined] = useState(false);
+  const [join, setJoin] = useState(false);
+  const [username, setUsername] = useState("");
   const [beforeJoin, setBeforeJoin] = useState(false);
-  useEffect(() => {
-    const getAllPosts = async () => {
-      if (!session?.user?.id) {
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      setError(null);
-      try {
-        const clubId = await getClubIdByUserId(session.user.id);
-        if (!clubId) {
-          setError("You don't belong to a club.");
-          setLoading(false);
-          return;
-        }
-        const rawPosts = await getPostsByClubId(clubId);
-        const posts: Post[] = rawPosts.map((post: any) => ({
-          id: post.id,
-          description: post.description,
-          postUrl: post.postUrl ?? null,
-          createdAt: new Date(post.createdAt),
-          collegeId: post.collegeId,
-          userId: post.userId,
-          user: {
-            username: post.user?.username?.trim() ?? "Anonymous",
-            image: post.user?.image ?? "/default-avatar.png",
-          },
-          comments: post.comments.map((comment: any) => ({
-            id: comment.id,
-            postId: comment.postId,
-            userId: comment.userId,
-            description: comment.description,
-            user: {
-              username: comment.user?.username?.trim() ?? "Anonymous",
-            },
-          })),
-        }));
-        setPosts(posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()));
-      } catch (err) {
-        setError("Failed to load posts. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    const ClubCheck = async () => {
-      const res = await BelongsToClubOrNot(session?.user?.id);
-      if (res) {
-        getAllPosts();
-      } else {
-        setLoading(false);
-        const username = GenerateRandomUsernameLocal();
-        setUsername(username);
-        setJoin(true); // Show Join modal by default
-      }
-    };
-    ClubCheck();
-  }, [session,Joined]);
-
-  const handleAddComment = async (postId: string) => {
-    const commentText = newComments[postId]?.trim();
-    if (!commentText) return;
-    await AddCommentToPost(postId, session?.user?.id, commentText);
-
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId
-          ? {
-              ...post,
-              comments: [
-                {
-                  id: crypto.randomUUID(),
-                  postId,
-                  userId: session?.user?.id ?? "unknown",
-                  description: commentText,
-                  user: {
-                    username: session?.user?.name ?? "Anonymous",
-                  },
-                },
-                ...post.comments,
-              ],
-            }
-          : post
-      )
-    );
-    setNewComments((prev) => ({ ...prev, [postId]: "" }));
-    setShowCommentBox((prev) => ({ ...prev, [postId]: false }));
-  };
+  const [expandedPosts, setExpandedPosts] = useState<Record<string, boolean>>(
+    {}
+  );
+  const [showCommentBox, setShowCommentBox] = useState<Record<string, boolean>>(
+    {}
+  );
+  const [newComments, setNewComments] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [Joined, setJoined] = useState(false);
 
   const toggleLike = (postId: string) => {
     setLikedPosts((prev) => ({
@@ -152,9 +77,124 @@ const ClubPage = ({ userId }: { userId: string }) => {
     }));
   };
 
+  const handleAddComment = async (postId: string) => {
+    const commentText = newComments[postId]?.trim();
+    if (!commentText) return;
+    await AddCommentToPost(postId, session?.user?.id, commentText);
+
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId
+          ? {
+              ...post,
+              comments: [
+                {
+                  id: crypto.randomUUID(),
+                  postId,
+                  userId: session?.user?.id ?? "unknown",
+                  description: commentText,
+                  user: {
+                    username: session?.user?.username ?? "Anonymous",
+                    image: session?.user?.image || "/default-avatar.png",
+                  },
+                },
+                ...post.comments,
+              ],
+            }
+          : post
+      )
+    );
+    setNewComments((prev) => ({ ...prev, [postId]: "" }));
+    setShowCommentBox((prev) => ({ ...prev, [postId]: false }));
+  };
+
+  useEffect(() => {
+    const getAllPosts = async () => {
+      if (!session?.user?.id) {
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      setError(null);
+      try {
+        const ClubId = await getClubIdByUserId(session.user.id);
+        if (!ClubId) {
+          setError("You don't belong to a campus.");
+          setLoading(false);
+          return;
+        }
+        const rawPosts = await getPostsByClubId(ClubId);
+        const posts: Post[] = rawPosts.map((post: any) => ({
+          id: post.id,
+          description: post.description,
+          postUrl: post.postUrl ?? null,
+          createdAt: new Date(post.createdAt),
+          ClubId: post.ClubId,
+          userId: post.userId,
+          user: {
+            username: post.user?.username?.trim() ?? "Anonymous",
+            image: post.user?.image ?? "/default-avatar.png",
+          },
+          comments: post.comments.map((comment: any) => ({
+            id: comment.id,
+            postId: comment.postId,
+            userId: comment.userId,
+            description: comment.description,
+            user: {
+              username: comment.user?.username?.trim() ?? "Anonymous",
+              image: comment.user?.image ?? "/default-avatar.png",
+            },
+          })),
+        }));
+        setPosts(
+          posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+        );
+      } catch (err) {
+        setError("Failed to load posts. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const ClubCheck = async () => {
+      const res = await BelongsToClubOrNot(session?.user?.id);
+      if (res) {
+        setBeforeJoin(false);
+        setJoin(false);
+        getAllPosts();
+      } else {
+        setLoading(false);
+
+        const username = session?.user.username
+          ? session?.user.username
+          : GenerateRandomUsernameLocal();
+        setUsername(username);
+        setJoin(true); // Show Join modal by default
+        setBeforeJoin(false); // Hide beforeJoin prompt
+      }
+    };
+    ClubCheck();
+  }, [session, Joined]);
+
+  if (loading) {
+    return (
+      <main className="flex-1 lg:ml-64 lg:mr-80 p-4 md:p-6 space-y-6 h-screen overflow-y-auto flex justify-center items-center">
+        <div className="text-xl text-gray-400">Loading campus feed...</div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="flex-1 lg:ml-64 lg:mr-80 p-4 md:p-6 space-y-6 h-screen overflow-y-auto flex justify-center items-center">
+        <div className="text-xl text-red-500">{error}</div>
+      </main>
+    );
+  }
+
   return (
     <>
-       {join && (
+      {join && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <Join
             belongsTo="club"
@@ -164,9 +204,10 @@ const ClubPage = ({ userId }: { userId: string }) => {
               setJoin(false);
               setBeforeJoin(true);
             }}
-             onJoined={() => {
-             setJoined(true);
-  }}
+            onJoined={() => {
+              setJoined(true);
+              // <-- This triggers useEffect
+            }}
           />
         </div>
       )}
@@ -175,7 +216,7 @@ const ClubPage = ({ userId }: { userId: string }) => {
       {beforeJoin && !join && (
         <div className="flex flex-col items-center justify-center min-h-[40vh]">
           <h1 className="text-4xl font-bold text-center text-purple-400 mb-6">
-            Please join club chat here
+            Please join campus chat here
           </h1>
           <a
             href="#"
@@ -194,7 +235,7 @@ const ClubPage = ({ userId }: { userId: string }) => {
       {/* Main content */}
       {!beforeJoin && !join && (
         <>
-          <CreatePostCard belongsTo="club" />
+          <CreatePostCard belongsTo="Club" />
           <section className="space-y-6 pb-6">
             {posts.length === 0 ? (
               <div className="text-center text-gray-400 py-10">
@@ -228,13 +269,16 @@ const ClubPage = ({ userId }: { userId: string }) => {
                           {post.user.username.trim()}
                         </span>
                         <p className="text-sm text-gray-400">
-                          {new Date(post.createdAt).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          {new Date(post.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
                         </p>
                       </div>
                     </div>
@@ -338,7 +382,7 @@ const ClubPage = ({ userId }: { userId: string }) => {
                             className="text-sm text-gray-300 bg-black p-1 rounded-lg flex items-start gap-3"
                           >
                             <Image
-                              src="/default-avatar.png"
+                              src={comment.user?.image || "/default-avatar.png"}
                               alt="Commenter Avatar"
                               className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                               width={32}
@@ -391,4 +435,4 @@ const ClubPage = ({ userId }: { userId: string }) => {
   );
 };
 
-export default ClubPage;
+export default CampusPage;

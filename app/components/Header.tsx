@@ -69,7 +69,7 @@ const Header = () => {
               </svg>
             </div>
             <span className="text-xl font-semibold text-white">
-              Campus Buzz
+             CampusBuzz
             </span>
           </div>
 

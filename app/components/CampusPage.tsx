@@ -45,12 +45,16 @@ const CampusPage = () => {
   const [username, setUsername] = useState("");
   const [beforeJoin, setBeforeJoin] = useState(false);
 
-  const [expandedPosts, setExpandedPosts] = useState<Record<string, boolean>>({});
-  const [showCommentBox, setShowCommentBox] = useState<Record<string, boolean>>({});
+  const [expandedPosts, setExpandedPosts] = useState<Record<string, boolean>>(
+    {}
+  );
+  const [showCommentBox, setShowCommentBox] = useState<Record<string, boolean>>(
+    {}
+  );
   const [newComments, setNewComments] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [Joined, setJoined] = useState(false)
+  const [Joined, setJoined] = useState(false);
 
   const toggleLike = (postId: string) => {
     setLikedPosts((prev) => ({
@@ -160,14 +164,17 @@ const CampusPage = () => {
         getAllPosts();
       } else {
         setLoading(false);
-        const username = GenerateRandomUsernameLocal();
+
+        const username = session?.user.username
+          ? session?.user.username
+          : GenerateRandomUsernameLocal();
         setUsername(username);
-        setJoin(true);         // Show Join modal by default
-        setBeforeJoin(false);  // Hide beforeJoin prompt
+        setJoin(true); // Show Join modal by default
+        setBeforeJoin(false); // Hide beforeJoin prompt
       }
     };
     CollegeCheck();
-  }, [session,Joined]);
+  }, [session, Joined]);
 
   if (loading) {
     return (
@@ -187,7 +194,6 @@ const CampusPage = () => {
 
   return (
     <>
-     
       {join && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <Join
@@ -198,10 +204,10 @@ const CampusPage = () => {
               setJoin(false);
               setBeforeJoin(true);
             }}
-             onJoined={() => {
-             setJoined(true);
-     // <-- This triggers useEffect
-  }}
+            onJoined={() => {
+              setJoined(true);
+              // <-- This triggers useEffect
+            }}
           />
         </div>
       )}
