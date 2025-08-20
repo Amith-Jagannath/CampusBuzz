@@ -6,6 +6,7 @@ import {
   AddCommentToPost,
   BelongsToCollegeOrNot,
   getCollegeIdByUserId,
+  getCollegeNameByID,
   getPostsByCollegeId,
 } from "../libs/server";
 import {
@@ -13,6 +14,7 @@ import {
   GenerateRandomUsernameLocal,
 } from "../utils/generateUsername";
 import CreatePostCard from "./CreatePost";
+import { FeedSkeleton } from "./FeedSkeleton";
 
 type Post = {
   id: string;
@@ -44,6 +46,7 @@ const CampusPage = () => {
   const [join, setJoin] = useState(false);
   const [username, setUsername] = useState("");
   const [beforeJoin, setBeforeJoin] = useState(false);
+  const [collegeName, setcollegeName] = useState("");
 
   const [expandedPosts, setExpandedPosts] = useState<Record<string, boolean>>(
     {}
@@ -118,6 +121,8 @@ const CampusPage = () => {
       setError(null);
       try {
         const collegeId = await getCollegeIdByUserId(session.user.id);
+        const collegeName = await getCollegeNameByID(collegeId);
+        setcollegeName(collegeName || "");
         if (!collegeId) {
           setError("You don't belong to a campus.");
           setLoading(false);
@@ -178,8 +183,10 @@ const CampusPage = () => {
 
   if (loading) {
     return (
-      <main className="flex-1 lg:ml-64 lg:mr-80 p-4 md:p-6 space-y-6 h-screen overflow-y-auto flex justify-center items-center">
-        <div className="text-xl text-gray-400">Loading campus feed...</div>
+      <main className="flex-1 p-4 md:p-6 space-y-6 flex justify-center items-start">
+        <div className="w-full max-w-2xl">
+          <FeedSkeleton />
+        </div>
       </main>
     );
   }
@@ -235,7 +242,13 @@ const CampusPage = () => {
       {/* Main content */}
       {!beforeJoin && !join && (
         <>
+          {" "}
           <CreatePostCard belongsTo="college" />
+          <div className="flex justify-center">
+            <span className="bg-purple-600/20 text-purple-400 px-3 py-1 rounded-full text-sm font-medium">
+              {collegeName} • 100K+ members
+            </span>
+          </div>
           <section className="space-y-6 pb-6">
             {posts.length === 0 ? (
               <div className="text-center text-gray-400 py-10">

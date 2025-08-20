@@ -35,7 +35,7 @@ export default function Home() {
   //   return <div className="text-white p-10">Loading...</div>;
   // }
   return (
-    <div className="bg-[#0e0b1f] text-white font-sans min-h-screen">
+    <div className="bg-zinc-950 text-white font-sans min-h-screen">
       {/* Fixed Top Header */}
       <Header />
       <MainContent InsideCampus = {false} />

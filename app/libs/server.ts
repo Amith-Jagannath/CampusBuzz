@@ -262,3 +262,25 @@ export async function BelongsToClubOrNot(userId: string | undefined) {
   if (user?.clubId) return true;
   else return false;
 }
+
+export async function getCollegeNameByID(collegeId: string | null) {
+  if (!collegeId) return null;
+
+  const college = await prisma.college.findUnique({
+    where: { id: collegeId },
+    select: { name: true },
+  });
+  console.log("College name:", college?.name);
+  return college?.name || null;
+}
+
+export async function getClubNameByID(clubId: string | null) {
+  if (!clubId) return null;
+
+  const club = await prisma.club.findUnique({
+    where: { id: clubId },
+    select: { name: true },
+  });
+  console.log("Club name:", club?.name);
+  return club?.name || null;
+}

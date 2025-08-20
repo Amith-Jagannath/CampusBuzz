@@ -58,7 +58,6 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
 
       if (belongsTo === "college") {
         const collegeId = await getCollegeIdByUserId(session?.user.id);
-        console.log("creating post for college:",collegeId)
         await createPostForCollege(
           session?.user.id,
           description,
@@ -88,17 +87,19 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
   };
 
   return (
-    <div className="bg-[#0f0f0f] rounded-xl p-6 shadow-md mb-4">
+    <>
+      {/* Just the button styled like a post */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="w-full bg-[#1a1a1a] text-gray-400 text-left px-4 py-3 rounded-lg hover:bg-[#2a2a2a] transition"
+        className="w-full bg-[#121212] text-gray-400 text-left px-5 py-4 rounded-2xl 
+                   border border-zinc-800 hover:bg-[#1e1e1e] transition mb-4"
       >
         Create a post...
       </button>
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex justify-center items-center px-4">
-          <div className="bg-[#121212] w-full max-w-2xl rounded-2xl p-6 relative">
+          <div className="bg-[#121212] w-full max-w-2xl rounded-2xl p-6 relative border border-zinc-800">
             <button
               className="absolute top-3 right-4 text-gray-400 text-2xl hover:text-white"
               onClick={() => setIsModalOpen(false)}
@@ -126,7 +127,7 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
               <div className="flex gap-4 text-gray-400 text-xl">
                 <label htmlFor="file-upload" className="cursor-pointer">
                   <span>🖼️</span>
-                  <span>(optional)</span>
+                  <span className="ml-1 text-sm">(optional)</span>
                   <input
                     id="file-upload"
                     type="file"
@@ -139,14 +140,14 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
 
               <button
                 onClick={handlePost}
-                className={`px-4 py-2 rounded-lg text-sm text-white ${
+                className={`px-5 py-2 rounded-lg text-sm font-medium text-white ${
                   isPosting
                     ? "bg-purple-400 cursor-not-allowed"
                     : "bg-purple-500 hover:bg-purple-600"
                 }`}
                 disabled={isPosting}
               >
-                {isPosting ? "Posting..." : "Next"}
+                {isPosting ? "Posting..." : "Post"}
               </button>
             </div>
 
@@ -160,6 +161,6 @@ export default function CreatePostCard({ belongsTo }: { belongsTo?: string }) {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

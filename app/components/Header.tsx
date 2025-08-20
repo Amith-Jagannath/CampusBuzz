@@ -55,7 +55,9 @@ const Header = () => {
     });
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 bg-[#0e0b1f] z-50 border-b border-zinc-800">
+      {/* <header className="fixed top-0 left-0 right-0 bg-zinc-950 border-b border-zinc-800"> */}
+      <header className="fixed top-0 left-0 right-0 bg-gradient-to-r from-purple-950 via-zinc-950 to-purple-950 border-b border-zinc-800">
+        {/* <header className="fixed top-0 left-0 right-0 bg-purple-900/30 backdrop-blur border-b border-purple-800/40"> */}
         <div className="w-full max-w-7xl mx-auto flex items-center justify-between p-6">
           {/* Left Section */}
           <div className="flex items-center space-x-2">
