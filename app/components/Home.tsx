@@ -1,6 +1,8 @@
 import React from "react";
-
+import { useState } from "react";
 const Home = () => {
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
   return (
     <main className="flex-col items-center space-y-3 sm:space-y-4 md:space-y-6 lg:space-y-8">
 
@@ -31,6 +33,26 @@ const Home = () => {
       </a>
     </div>
   </div>
+
+  <div className="bg-black p-4 rounded-2xl border border-zinc-800 shadow-md">
+          <h3 className="font-semibold mb-3">🍔 Poll of the Day</h3>
+          <p className="text-gray-400 text-sm mb-3">Best late-night snack?</p>
+          <div className="space-y-2">
+            {["Maggi 🍜", "Momos 🥟", "Pizza 🍕", "Biryani 🍲"].map((option) => (
+              <button
+                key={option}
+                onClick={() => setSelectedOption(option)}
+                className={`w-full text-left px-4 py-2 rounded-lg border text-sm transition ${
+                  selectedOption === option
+                    ? "bg-purple-600 border-purple-500 text-white"
+                    : "border-zinc-700 text-gray-300 hover:bg-zinc-800"
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
 
   {/* Example Ad Post 2 */}
   <div className="space-y-4">
