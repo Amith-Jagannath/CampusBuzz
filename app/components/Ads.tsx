@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 const Ads = () => {
   return (
     <aside className="w-80 bg-zinc-900 border-l border-zinc-800 p-4 fixed right-0 bottom-0 overflow-y-auto">

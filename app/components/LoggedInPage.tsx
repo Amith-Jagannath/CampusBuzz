@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import CreatePostCard from "./CreatePost";
 // Assuming these are server-side functions
 import Home from "./Home"; // Assuming you have a Home component for the home feed
@@ -87,7 +87,7 @@ const LoggedInPage = ({ userId }: { userId: string }) => {
       {/* Posts Feed */}
       {home && <Home />}
       {campus && <CampusPage />}
-      {club && <Club userId = {userId}/>}
+      {club && <Club />}
     </main>
   );
 };

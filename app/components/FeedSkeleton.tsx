@@ -1,4 +1,3 @@
-// components/FeedSkeleton.tsx
 import React from "react";
 
 export function FeedSkeleton() {
