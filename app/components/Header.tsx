@@ -33,18 +33,18 @@ const Header = () => {
       if (!imageUrl) return;
     }
     // console.log("Image URL:", imageUrl);
-    const res = await EditUserBio(session?.user.id, username, imageUrl);
+    await EditUserBio(session?.user.id, username, imageUrl);
     setUsername(username);
     setImage(imageUrl);
     setShowEditModal(false);
   };
-  const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(URL.createObjectURL(file));
-      setImageFile(file);
-    }
-  };
+const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0]; // Use optional chaining for safety
+  if (file) {
+    setImage(URL.createObjectURL(file));
+    setImageFile(file);
+  }
+};
 
   const convertToBase64 = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {

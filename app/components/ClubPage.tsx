@@ -9,19 +9,39 @@ import {
   getClubNameByID,
   getPostsByClubId,
 } from "../libs/server";
-import {
-  GenerateRandomUsername,
-  GenerateRandomUsernameLocal,
-} from "../utils/generateUsername";
+import { GenerateRandomUsernameLocal } from "../utils/generateUsername";
 import CreatePostCard from "./CreatePost";
 import { FeedSkeleton } from "./FeedSkeleton";
+
+type RawPost = {
+  id: string;
+  description: string;
+  postUrl: string | null;
+  createdAt: Date; // Correct type is Date
+  clubId: string;
+  userId: string;
+  user: {
+    username: string | null;
+    image: string | null;
+  };
+  comments: {
+    id: string;
+    postId: string;
+    userId: string;
+    description: string;
+    user: {
+      username: string | null;
+      image: string | null;
+    } | null;
+  }[];
+};
 
 type Post = {
   id: string;
   description: string;
   postUrl: string | null;
   createdAt: Date;
-  ClubId: string;
+  clubId: string;
   userId: string;
   user: {
     username: string;
@@ -39,7 +59,7 @@ type Post = {
   }[];
 };
 
-const CampusPage = () => {
+const ClubPage = () => {
   const { data: session } = useSession();
   const [posts, setPosts] = useState<Post[]>([]);
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({});
@@ -47,7 +67,6 @@ const CampusPage = () => {
   const [username, setUsername] = useState("");
   const [beforeJoin, setBeforeJoin] = useState(false);
   const [clubName, setClubName] = useState("");
-
   const [expandedPosts, setExpandedPosts] = useState<Record<string, boolean>>(
     {}
   );
@@ -120,21 +139,21 @@ const CampusPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const ClubId = await getClubIdByUserId(session.user.id);
-        const clubName = await getClubNameByID(ClubId);
+        const clubId = await getClubIdByUserId(session.user.id);
+        const clubName = await getClubNameByID(clubId);
         setClubName(clubName || "");
-        if (!ClubId) {
-          setError("You don't belong to a campus.");
+        if (!clubId) {
+          setError("You don't belong to a club."); // Corrected error message
           setLoading(false);
           return;
         }
-        const rawPosts = await getPostsByClubId(ClubId);
-        const posts: Post[] = rawPosts.map((post: any) => ({
+        const rawPosts = await getPostsByClubId(clubId);
+        const posts: Post[] = (rawPosts as RawPost[]).map((post) => ({
           id: post.id,
           description: post.description,
           postUrl: post.postUrl ?? null,
-          createdAt: new Date(post.createdAt),
-          ClubId: post.ClubId,
+          createdAt: post.createdAt, // Corrected: `new Date()` is not needed
+          clubId: post.clubId,
           userId: post.userId,
           user: {
             username: post.user?.username?.trim() ?? "Anonymous",
@@ -155,6 +174,7 @@ const CampusPage = () => {
           posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
         );
       } catch (err) {
+        console.log(err)
         setError("Failed to load posts. Please try again later.");
       } finally {
         setLoading(false);
@@ -169,7 +189,6 @@ const CampusPage = () => {
         getAllPosts();
       } else {
         setLoading(false);
-
         const username = session?.user.username
           ? session?.user.username
           : GenerateRandomUsernameLocal();
@@ -182,14 +201,14 @@ const CampusPage = () => {
   }, [session, Joined]);
 
   if (loading) {
-  return (
-   <main className="flex-1 p-4 md:p-6 space-y-6 flex justify-center items-start">
-      <div className="w-full max-w-2xl">
-        <FeedSkeleton />
-      </div>
-    </main>
-  );
-}
+    return (
+      <main className="flex-1 p-4 md:p-6 space-y-6 flex justify-center items-start">
+        <div className="w-full max-w-2xl">
+          <FeedSkeleton />
+        </div>
+      </main>
+    );
+  }
 
   if (error) {
     return (
@@ -213,17 +232,15 @@ const CampusPage = () => {
             }}
             onJoined={() => {
               setJoined(true);
-              // <-- This triggers useEffect
             }}
           />
         </div>
       )}
 
-      {/* Show join prompt if beforeJoin is true and join is false */}
       {beforeJoin && !join && (
         <div className="flex flex-col items-center justify-center min-h-[40vh]">
           <h1 className="text-4xl font-bold text-center text-purple-400 mb-6">
-            Please join campus chat here
+            Please join club chat here
           </h1>
           <a
             href="#"
@@ -239,19 +256,18 @@ const CampusPage = () => {
         </div>
       )}
 
-      {/* Main content */}
       {!beforeJoin && !join && (
-        <> <CreatePostCard belongsTo="Club" />
-         <div className="flex justify-center">
-    <span className="bg-purple-600/20 text-purple-400 px-3 py-1 rounded-full text-sm font-medium">
-      {clubName} • 100K+ members
-    </span>
-  </div>
-          
+        <>
+          <CreatePostCard belongsTo="club" />
+          <div className="flex justify-center">
+            <span className="bg-purple-600/20 text-purple-400 px-3 py-1 rounded-full text-sm font-medium">
+              {clubName} • 100K+ members
+            </span>
+          </div>
           <section className="space-y-6 pb-6">
             {posts.length === 0 ? (
               <div className="text-center text-gray-400 py-10">
-                No posts yet! Be the first to share something with your campus.
+                No posts yet! Be the first to share something with your club.
               </div>
             ) : (
               posts.map((post) => {
@@ -267,7 +283,6 @@ const CampusPage = () => {
                     key={post.id}
                     className="bg-black p-4 sm:p-6 rounded-xl shadow-lg border border-gray-900 transition-all duration-300 ease-in-out"
                   >
-                    {/* User Info */}
                     <div className="flex items-center mb-4">
                       <Image
                         src={post.user.image}
@@ -294,13 +309,9 @@ const CampusPage = () => {
                         </p>
                       </div>
                     </div>
-
-                    {/* Post Description */}
                     <p className="mb-4 text-gray-200 leading-relaxed">
                       {post.description}
                     </p>
-
-                    {/* Post Image */}
                     {post.postUrl && (
                       <div className="mb-4">
                         <Image
@@ -312,8 +323,6 @@ const CampusPage = () => {
                         />
                       </div>
                     )}
-
-                    {/* Interaction Buttons */}
                     <div className="flex items-center gap-6 mt-4 pt-4">
                       <button
                         onClick={() => toggleLike(post.id)}
@@ -338,7 +347,6 @@ const CampusPage = () => {
                           {likedPosts[post.id] ? "Liked" : "Like"}
                         </span>
                       </button>
-
                       <button
                         className="flex items-center text-gray-400 hover:text-purple-400 transition-colors duration-200 text-base font-medium"
                         onClick={() => toggleCommentBox(post.id)}
@@ -346,8 +354,6 @@ const CampusPage = () => {
                         <span className="mr-2 text-xl">💬</span> Comment
                       </button>
                     </div>
-
-                    {/* Comment Input */}
                     {isCommenting && (
                       <div className="mt-5 w-full overflow-hidden">
                         <div className="flex items-center gap-2 w-full">
@@ -378,8 +384,6 @@ const CampusPage = () => {
                         </div>
                       </div>
                     )}
-
-                    {/* Comments Section */}
                     <div className="mt-6 space-y-3">
                       {visibleComments.length === 0 ? (
                         isCommenting ? null : (
@@ -409,8 +413,6 @@ const CampusPage = () => {
                           </div>
                         ))
                       )}
-
-                      {/* Show More Comments */}
                       {hasMoreComments && (
                         <button
                           onClick={() => toggleComments(post.id)}
@@ -447,4 +449,4 @@ const CampusPage = () => {
   );
 };
 
-export default CampusPage;
+export default ClubPage;

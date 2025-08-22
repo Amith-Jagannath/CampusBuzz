@@ -1,5 +1,4 @@
 import React, {  useState } from "react";
-import CreatePostCard from "./CreatePost";
 // Assuming these are server-side functions
 import Home from "./Home"; // Assuming you have a Home component for the home feed
 
@@ -7,30 +6,9 @@ import CampusPage from "./CampusPage"; // Assuming you have a CampusPage compone
 import Club from "./ClubPage"; // Assuming you have a Club component for club feed
 
 // Define the Post type for better type safety
-type Post = {
-  id: string;
-  description: string;
-  postUrl: string | null;
-  createdAt: Date;
-  collegeId: string;
-  userId: string;
-  user: {
-    username: string;
-    image: string;
-  };
-  comments: {
-    id: string;
-    postId: string;
-    userId: string;
-    description: string;
-    // Assuming comment also has a user, or we'll display "Anonymous"
-    user?: {
-      username: string;
-    };
-  }[];
-};
 
-const LoggedInPage = ({ userId }: { userId: string }) => {
+
+const LoggedInPage = () => {
   const [home, setHome] = useState(true);
   const [campus, setCampus] = useState(false);
   const [club,setClub] = useState(false);

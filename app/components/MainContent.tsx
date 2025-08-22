@@ -9,10 +9,8 @@ import { useRouter } from "next/navigation";
 import { Belongstocampus } from "../libs/server";
 import LoggedInPage from "./LoggedInPage";
 // import MainContent from './MainContent'
-type MainContentProps = {
-  InsideCampus: boolean;
-};
-const MainContent = ({ InsideCampus }: MainContentProps) => {
+
+const MainContent = () => {
   const [showModal, setShowModal] = useState(false);
   const [username, setUsername] = useState("");
   const [college, setCollege] = useState("");
@@ -27,34 +25,34 @@ const MainContent = ({ InsideCampus }: MainContentProps) => {
       return;
     }
 
-    const res = await addUserToCampus(college, username, session?.user.id);
+    await addUserToCampus(college, username, session?.user.id);
     console.log(username, college);
     const selectedCollege = colleges.find((c) => c.name === college);
     const collegeId = selectedCollege ? selectedCollege.id : null;
     router.push(`/campus/${collegeId}`);
   };
 
-  const openModal = async () => {
-    const belongsTo = await Belongstocampus(session?.user.id);
-    console.log("Belong:", belongsTo);
-    if (belongsTo) {
-      ///He she is a member of campus
-      router.push(`/campus/${belongsTo}`);
-      return;
-    }
-    const res = await fetch("/api/gemini", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        prompt:
-          "Please generate a random username for my application user, just return one username without any extra character, since your response will be set as the username",
-      }),
-    });
-    const data = await res.json();
-    console.log(data);
-    setUsername(data.result);
-    setShowModal(true);
-  };
+//   const openModal = async () => {
+//     const belongsTo = await Belongstocampus(session?.user.id);
+//     console.log("Belong:", belongsTo);
+//     if (belongsTo) {
+//       ///He she is a member of campus
+//       router.push(`/campus/${belongsTo}`);
+//       return;
+//     }
+//     const res = await fetch("/api/gemini", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         prompt:
+//           "Please generate a random username for my application user, just return one username without any extra character, since your response will be set as the username",
+//       }),
+//     });
+//     const data = await res.json();
+//     console.log(data);
+//     setUsername(data.result);
+//     setShowModal(true);
+//   };
   const closeModal = () => setShowModal(false);
   useEffect(() => {
     const fetchColleges = async () => {
@@ -201,7 +199,7 @@ const MainContent = ({ InsideCampus }: MainContentProps) => {
               </nav>
             </aside> */}
 
-           <LoggedInPage userId={session?.user.id || ""} />
+           <LoggedInPage/>
             {/* {InsideCampus ? <CampusMainPage /> : <Home />} */}
           </div>
         

@@ -173,7 +173,8 @@ const CampusPage = () => {
         setPosts(
           posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
         );
-      } catch (_err) {
+      } catch (err) {
+        console.log(err)
         setError("Failed to load posts. Please try again later.");
       } finally {
         setLoading(false);

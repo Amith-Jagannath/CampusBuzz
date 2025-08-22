@@ -1,9 +1,6 @@
 "use client";
 
-
 import { useSession } from "next-auth/react";
-
-
 
 import Header from "./components/Header";
 import MainContent from "./components/MainContent";
@@ -37,7 +34,7 @@ export default function Home() {
     <div className="bg-zinc-950 text-white font-sans min-h-screen">
       {/* Fixed Top Header */}
       <Header />
-      <MainContent InsideCampus = {false} />
+      <MainContent />
     </div>
   );
 }

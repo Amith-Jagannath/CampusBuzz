@@ -8,6 +8,17 @@ type JoinProps = {
   onClose: () => void;
   onJoined: () => void;
 };
+type College = {
+  id: string;
+  name: string;
+ 
+};
+
+type Club = {
+  id: string;
+  name: string;
+
+};
 
 const Join = ({ belongsTo, userId, username_param, onClose, onJoined }: JoinProps) => {
   const [showModal, setShowModal] = useState(true);
@@ -26,14 +37,19 @@ const Join = ({ belongsTo, userId, username_param, onClose, onJoined }: JoinProp
 
   useEffect(() => {
     const fetchItems = async () => {
+    try {
       if (belongsTo === "college") {
-        const res = await getColleges();
-        setDropDownItems(res.map((item: any) => ({ id: item.id, name: item.name })));
+        const res: College[] = await getColleges();
+        setDropDownItems(res.map((item) => ({ id: item.id, name: item.name })));
       } else if (belongsTo === "club") {
-        const res = await getClubs();
-        setDropDownItems(res.map((item: any) => ({ id: item.id, name: item.name })));
+        const res: Club[] = await getClubs();
+        setDropDownItems(res.map((item) => ({ id: item.id, name: item.name })));
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch dropdown items:", error);
+      // You might also want to set an error state here
+    }
+  };
     fetchItems();
   }, [belongsTo]);
 
@@ -59,6 +75,7 @@ const Join = ({ belongsTo, userId, username_param, onClose, onJoined }: JoinProp
       setShowModal(false);
       onJoined();
     } catch (error) {
+      console.log(error);
       setErrorMsg("An error occurred. Please try again.");
     } finally {
       setIsJoining(false);
