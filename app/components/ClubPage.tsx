@@ -159,7 +159,7 @@ const ClubPage = () => {
             username: post.user?.username?.trim() ?? "Anonymous",
             image: post.user?.image ?? "/default-avatar.png",
           },
-          comments: post.comments.map((comment: any) => ({
+          comments: post.comments.map((comment) => ({
             id: comment.id,
             postId: comment.postId,
             userId: comment.userId,

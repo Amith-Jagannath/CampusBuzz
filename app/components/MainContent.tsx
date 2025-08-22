@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { addUserToCampus, getColleges } from "../libs/server";
 import { useRouter } from "next/navigation";
-import { Belongstocampus } from "../libs/server";
 import LoggedInPage from "./LoggedInPage";
 // import MainContent from './MainContent'
 
