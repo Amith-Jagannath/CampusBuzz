@@ -33,8 +33,15 @@ export async function POST(req: NextRequest) {
       optimizeUrl,
       autoCropUrl,
     });
-  } catch (error: any) {
-    console.error("Upload failed:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+  console.error("Upload failed:", error);
+
+  let message = "Unknown error occurred";
+
+  if (error instanceof Error) {
+    message = error.message;
   }
+
+  return NextResponse.json({ error: message }, { status: 500 });
+}
 }
