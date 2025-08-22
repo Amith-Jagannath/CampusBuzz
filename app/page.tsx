@@ -1,15 +1,14 @@
 "use client";
 
-import { signIn, signOut } from "next-auth/react";
+
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import MainContent from "./components/MainContent";
-import { useState } from "react";
-import { getColleges } from "./libs/server";
-import { addUserToCampus } from "./libs/server";
+
+
+
 import Header from "./components/Header";
+import MainContent from "./components/MainContent";
 export default function Home() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   // const [showModal, setShowModal] = useState(false);
   // const [username, setUsername] = useState("");
   // const [college, setCollege] = useState("");
