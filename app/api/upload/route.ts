@@ -3,9 +3,9 @@ import { v2 as cloudinary } from "cloudinary";
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: "dbsixtelc",
-  api_key: "134524972224446",
-  api_secret: "J5d5He4t-jCpPPl2aWxTu4g93Z0", // ✅ keep secret in env
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 export async function POST(req: NextRequest) {
@@ -34,14 +34,14 @@ export async function POST(req: NextRequest) {
       autoCropUrl,
     });
   } catch (error) {
-  console.error("Upload failed:", error);
+    console.error("Upload failed:", error);
 
-  let message = "Unknown error occurred";
+    let message = "Unknown error occurred";
 
-  if (error instanceof Error) {
-    message = error.message;
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  return NextResponse.json({ error: message }, { status: 500 });
-}
 }

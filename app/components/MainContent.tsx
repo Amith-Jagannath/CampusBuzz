@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import { addUserToCampus, getColleges } from "../libs/server";
 import { useRouter } from "next/navigation";
 import LoggedInPage from "./LoggedInPage";
-// import MainContent from './MainContent'
 
 const MainContent = () => {
   const [showModal, setShowModal] = useState(false);
