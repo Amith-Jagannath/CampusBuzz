@@ -9,9 +9,7 @@ const nextConfig = {
     domains: ["lh3.googleusercontent.com", "res.cloudinary.com"],
   },
 
-  experimental: {
-    serverComponentsExternalPackages: ["prisma"],
-  },
+  serverExternalPackages: ["prisma"],
 };
 
 // Keep PWA wrapper as the default export
