@@ -10,7 +10,6 @@ const nextConfig = {
   },
 
   experimental: {
-    // 👇 Add this so Prisma's query engine is included in the bundle
     serverComponentsExternalPackages: ["prisma"],
   },
 };

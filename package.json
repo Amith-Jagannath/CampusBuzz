@@ -38,5 +38,8 @@
     "prisma": "^6.8.2",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "eslintIgnore": [
+    "app/generated/prisma/client/*"
+  ]
 }
