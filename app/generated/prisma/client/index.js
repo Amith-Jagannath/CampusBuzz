@@ -35,12 +35,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.8.2
- * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
+ * Prisma Client JS version: 6.16.3
+ * Query Engine version: bb420e667c1820a8c05a38023385f6cc7ef8e83a
  */
 Prisma.prismaVersion = {
-  client: "6.8.2",
-  engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
+  client: "6.16.3",
+  engine: "bb420e667c1820a8c05a38023385f6cc7ef8e83a"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -216,13 +216,10 @@ const config = {
         "fromEnvVar": null,
         "value": "windows",
         "native": true
-      },
-      {
-        "fromEnvVar": null,
-        "value": "rhel-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
+    "documentation": "binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]",
     "sourceFilePath": "C:\\Users\\amyth\\Documents\\campusbuzz\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
@@ -231,8 +228,8 @@ const config = {
     "schemaEnvPath": "../../../../.env"
   },
   "relativePath": "../../../../prisma",
-  "clientVersion": "6.8.2",
-  "engineVersion": "2060c79ba17c6bb9f5823312b6f6b7f4a845738e",
+  "clientVersion": "6.16.3",
+  "engineVersion": "bb420e667c1820a8c05a38023385f6cc7ef8e83a",
   "datasourceNames": [
     "db"
   ],
@@ -246,8 +243,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"../app/generated/prisma/client\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Account {\n  id                 String    @id @default(cuid())\n  userId             String\n  providerType       String\n  providerId         String\n  providerAccountId  String\n  refreshToken       String?\n  accessToken        String?\n  accessTokenExpires DateTime?\n  createdAt          DateTime  @default(now())\n  updatedAt          DateTime  @updatedAt\n  user               User      @relation(fields: [userId], references: [id])\n\n  @@unique([providerId, providerAccountId])\n}\n\nmodel Session {\n  id           String   @id @default(cuid())\n  userId       String\n  expires      DateTime\n  sessionToken String   @unique\n  accessToken  String?\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n  user         User     @relation(fields: [userId], references: [id])\n}\n\nmodel College {\n  id    String @id @default(uuid())\n  name  String @unique\n  state String\n  posts Post[]\n  users User[] @relation(\"CollegeToUsers\")\n}\n\nmodel Club {\n  id    String @id @default(uuid())\n  name  String @unique\n  state String\n  posts Post[]\n  users User[] @relation(\"ClubToUsers\")\n}\n\nmodel User {\n  id            String    @id @default(cuid())\n  name          String?\n  username      String?   @unique\n  email         String?   @unique\n  emailVerified DateTime?\n  image         String?\n  createdAt     DateTime  @default(now())\n  updatedAt     DateTime  @updatedAt\n  collegeId     String?\n  college       College?  @relation(\"CollegeToUsers\", fields: [collegeId], references: [id])\n  clubId        String?\n  club          Club?     @relation(\"ClubToUsers\", fields: [clubId], references: [id])\n  accounts      Account[]\n  sessions      Session[]\n  comments      Comment[]\n  posts         Post[]\n}\n\nmodel VerificationRequest {\n  id         String   @id @default(cuid())\n  identifier String\n  token      String   @unique\n  expires    DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n\n  @@unique([identifier, token])\n}\n\nmodel Post {\n  id String @id @default(uuid())\n\n  userId      String\n  postUrl     String?\n  description String\n  createdAt   DateTime  @default(now())\n  comments    Comment[]\n  user        User      @relation(fields: [userId], references: [id])\n  collegeId   String?\n  college     College?  @relation(fields: [collegeId], references: [id])\n  clubId      String?\n  club        Club?     @relation(fields: [clubId], references: [id])\n}\n\nmodel Comment {\n  id          String   @id @default(uuid())\n  postId      String\n  userId      String\n  description String\n  createdAt   DateTime @default(now())\n  post        Post     @relation(fields: [postId], references: [id])\n  user        User     @relation(fields: [userId], references: [id])\n}\n",
-  "inlineSchemaHash": "4387c264793fa583bb19e83cf354e8ab8af0adba417b0192429636fb4ccabc8f",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma/client\"\n  /**\n   * binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n   */\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Account {\n  id                 String    @id @default(cuid())\n  userId             String\n  providerType       String\n  providerId         String\n  providerAccountId  String\n  refreshToken       String?\n  accessToken        String?\n  accessTokenExpires DateTime?\n  createdAt          DateTime  @default(now())\n  updatedAt          DateTime  @updatedAt\n  user               User      @relation(fields: [userId], references: [id])\n\n  @@unique([providerId, providerAccountId])\n}\n\nmodel Session {\n  id           String   @id @default(cuid())\n  userId       String\n  expires      DateTime\n  sessionToken String   @unique\n  accessToken  String?\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n  user         User     @relation(fields: [userId], references: [id])\n}\n\nmodel College {\n  id    String @id @default(uuid())\n  name  String @unique\n  state String\n  posts Post[]\n  users User[] @relation(\"CollegeToUsers\")\n}\n\nmodel Club {\n  id    String @id @default(uuid())\n  name  String @unique\n  state String\n  posts Post[]\n  users User[] @relation(\"ClubToUsers\")\n}\n\nmodel User {\n  id            String    @id @default(cuid())\n  name          String?\n  username      String?   @unique\n  email         String?   @unique\n  emailVerified DateTime?\n  image         String?\n  createdAt     DateTime  @default(now())\n  updatedAt     DateTime  @updatedAt\n  collegeId     String?\n  college       College?  @relation(\"CollegeToUsers\", fields: [collegeId], references: [id])\n  clubId        String?\n  club          Club?     @relation(\"ClubToUsers\", fields: [clubId], references: [id])\n  accounts      Account[]\n  sessions      Session[]\n  comments      Comment[]\n  posts         Post[]\n}\n\nmodel VerificationRequest {\n  id         String   @id @default(cuid())\n  identifier String\n  token      String   @unique\n  expires    DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n\n  @@unique([identifier, token])\n}\n\nmodel Post {\n  id String @id @default(uuid())\n\n  userId      String\n  postUrl     String?\n  description String\n  createdAt   DateTime  @default(now())\n  comments    Comment[]\n  user        User      @relation(fields: [userId], references: [id])\n  collegeId   String?\n  college     College?  @relation(fields: [collegeId], references: [id])\n  clubId      String?\n  club        Club?     @relation(fields: [clubId], references: [id])\n}\n\nmodel Comment {\n  id          String   @id @default(uuid())\n  postId      String\n  userId      String\n  description String\n  createdAt   DateTime @default(now())\n  post        Post     @relation(fields: [postId], references: [id])\n  user        User     @relation(fields: [userId], references: [id])\n}\n",
+  "inlineSchemaHash": "b395cd6d1a1208906c211f277dda186d12a7d6018457ae02ee9d4a0ea817cd65",
   "copyEngine": true
 }
 
@@ -288,10 +285,6 @@ Object.assign(exports, Prisma)
 // file annotations for bundling tools to include these files
 path.join(__dirname, "query_engine-windows.dll.node");
 path.join(process.cwd(), "app/generated/prisma/client/query_engine-windows.dll.node")
-
-// file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-rhel-openssl-3.0.x.so.node");
-path.join(process.cwd(), "app/generated/prisma/client/libquery_engine-rhel-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "app/generated/prisma/client/schema.prisma")
