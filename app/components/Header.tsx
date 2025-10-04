@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { signOut, useSession} from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import Image from "next/image";
 import { EditUserBio } from "../libs/server";
@@ -38,13 +38,13 @@ const Header = () => {
     setImage(imageUrl);
     setShowEditModal(false);
   };
-const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0]; // Use optional chaining for safety
-  if (file) {
-    setImage(URL.createObjectURL(file));
-    setImageFile(file);
-  }
-};
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; // Use optional chaining for safety
+    if (file) {
+      setImage(URL.createObjectURL(file));
+      setImageFile(file);
+    }
+  };
 
   const convertToBase64 = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -70,9 +70,7 @@ const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                 <path d="M2 5a2 2 0 012-2h2l4 4H18a2 2 0 012 2v2a2 2 0 01-2 2h-8l-4 4H4a2 2 0 01-2-2V5z" />
               </svg>
             </div>
-            <span className="text-xl font-semibold text-white">
-             CampusBuzz
-            </span>
+            <span className="text-xl font-semibold text-white">CampusBuzz</span>
           </div>
 
           {/* Hamburger Icon */}
@@ -147,7 +145,7 @@ const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
               🖼️ Change Image
             </button> */}
             <button className="w-full text-left px-4 py-2 rounded hover:bg-white/10 transition">
-              ⚙️ Settings
+              📜 My Posts
             </button>
             <button
               onClick={() => signOut()}

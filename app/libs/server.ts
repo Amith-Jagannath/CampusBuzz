@@ -284,3 +284,36 @@ export async function getClubNameByID(clubId: string | null) {
   console.log("Club name:", club?.name);
   return club?.name || null;
 }
+
+export async function getPostsByUserId(userId: string | undefined) {
+  if (!userId) return [];
+  
+  const posts = await prisma.post.findMany({
+    where: { userId },
+    include: {
+      user: {
+        select: { username: true, image: true },
+      },
+      comments: {
+        include: {
+          user: {
+            select: { username: true, image: true },
+          },
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return posts;
+}
+
+export async function deletePostById(postId: string) {
+  if (!postId) return;
+
+  await prisma.post.delete({
+    where: { id: postId },
+  });
+}
