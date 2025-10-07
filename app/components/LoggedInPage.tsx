@@ -5,6 +5,7 @@ import Home from "./Home"; // Assuming you have a Home component for the home fe
 import CampusPage from "./CampusPage"; // Assuming you have a CampusPage component for campus feed
 import Club from "./ClubPage"; // Assuming you have a Club component for club feed
 import MyPost from "./MyPost";
+import Profile from "./Profile";
 
 // Define the Post type for better type safety
 
@@ -106,6 +107,7 @@ const LoggedInPage = () => {
       {campus && <CampusPage />}
       {club && <Club />}
       {myPost && <MyPost />}
+      {profile && <Profile />}
     </main>
   );
 };

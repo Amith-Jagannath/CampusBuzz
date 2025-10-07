@@ -317,3 +317,20 @@ export async function deletePostById(postId: string) {
     where: { id: postId },
   });
 }
+export async function GetUserDetailsByUserId(userId: string) {
+  if (!userId) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: {
+      college: {
+        select: { name: true },
+      },
+      club: {
+        select: { name: true },
+      },
+    },
+  });
+
+  return user;
+}
