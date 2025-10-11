@@ -1,237 +1,224 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { getColleges, getClubs, GetUserDetailsByUserId } from "../libs/server"; // your APIs
+import { Camera } from "lucide-react";
+import {
+  getColleges,
+  getClubs,
+  GetUserDetailsByUserId,
+  EditUserBio,
+} from "../libs/server"; // your APIs
 
-interface StyledInputProps {
-  label: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  disabled?: boolean;
-}
-
-const Profile: React.FC = () => {
+export default function ProfilePage() {
   const { data: session } = useSession();
-
-  // initial values
-  const [username, setUsername] = useState(session?.user?.name || "");
+  const [username, setUsername] = useState("");
   const [college, setCollege] = useState("");
   const [club, setClub] = useState("");
-  const [bio] = useState("");
+  const [collegeId, setCollegeId] = useState("");
+  const [clubId, setClubId] = useState("");
+  const [image, setImage] = useState<string | null>(null);
+  const [colleges, setColleges] = useState<any[]>([]);
+  const [clubs, setClubs] = useState<any[]>([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [status, setStatus] = useState("");
-  const [colleges, setColleges] = useState<{ id: string; name: string }[]>([]);
-  const [clubs, setClubs] = useState<{ id: string; name: string }[]>([]);
 
-  // fetch dropdowns
-  const fetchDropdownData = async () => {
-    try {
-      const [collegeRes, clubRes] = await Promise.all([
+  // ✅ Load colleges and clubs
+  useEffect(() => {
+    const loadData = async () => {
+      const [collegesData, clubsData] = await Promise.all([
         getColleges(),
         getClubs(),
       ]);
-      setColleges(collegeRes.map((c: any) => ({ id: c.id, name: c.name })));
-      setClubs(clubRes.map((c: any) => ({ id: c.id, name: c.name })));
-    } catch (err) {
-      console.error("Error fetching data:", err);
-    }
-  };
+      setColleges(collegesData || []);
+      setClubs(clubsData || []);
+    };
+    loadData();
+  }, []);
 
-  const handleEdit = () => {
-    setIsEditing(true);
-    fetchDropdownData();
-  };
-
-  const handleSave = () => {
-    setIsEditing(false);
-    setStatus("Profile updated successfully!");
-    setTimeout(() => setStatus(""), 3000);
-    console.log({ username, college, club, bio });
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-    setStatus("Editing cancelled.");
-    setTimeout(() => setStatus(""), 3000);
-  };
-
-  const StyledInput: React.FC<StyledInputProps> = ({
-    label,
-    value,
-    onChange,
-    placeholder = "",
-    disabled = false,
-  }) => (
-    <div className="flex flex-col space-y-1 w-full max-w-md">
-      <label className="text-sm font-medium text-slate-400">{label}</label>
-      <input
-        type="text"
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        disabled={disabled}
-        className={`w-full p-3 bg-black text-white border ${
-          disabled ? "border-slate-800" : "border-purple-500"
-        } rounded-lg shadow-inner transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500`}
-      />
-    </div>
-  );
+  // ✅ Fetch user details and prefill data
   useEffect(() => {
     const getUserDetails = async () => {
-      const userDetails = await GetUserDetailsByUserId(
-        session?.user?.id as string
-      );
+      if (!session?.user?.id) return;
+
+      const userDetails = await GetUserDetailsByUserId(session.user.id);
       if (userDetails) {
         setUsername(userDetails.username || "");
         setCollege(userDetails.college?.name || "");
         setClub(userDetails.club?.name || "");
-        //  setBio(userDetails.bio || "");
+
+        // ✅ store both ID and name
+        setCollegeId(userDetails.collegeId || "");
+        setClubId(userDetails.clubId || "");
+
+        setImage(userDetails.image || session.user.image || null);
       }
     };
-
     getUserDetails();
-  }, []);
+  }, [session]);
+
+  // ✅ Handle saving profile edits
+  const handleSave = async () => {
+    if (!session?.user?.id) return;
+   await EditUserBio(session.user.id, username, image, collegeId, clubId);
+    console.log(username, collegeId, clubId, image);
+    setIsEditing(false);
+  };
+
+  // ✅ Handle image upload preview
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImage(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 flex justify-center items-start pt-10">
-      <div className="w-full max-w-2xl">
-        {session ? (
-          <div className="bg-black border border-slate-600 rounded-2xl shadow-2xl p-8 hover:shadow-purple-500/40">
-            {/* Profile Header */}
-            <div className="flex flex-col items-center mb-8 pb-8 border-b border-slate-700">
-              <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-purple-500 shadow-lg">
-                {session.user?.image ? (
-                  <Image
-                    src={session.user.image}
-                    alt={session.user.name || "User Avatar"}
-                    width={128}
-                    height={128}
-                    className="object-cover"
-                    priority
-                  />
-                ) : (
-                  <div className="w-full h-full bg-purple-600 flex items-center justify-center text-4xl font-bold">
-                    {session.user?.name ? session.user.name[0] : "U"}
-                  </div>
-                )}
-              </div>
-              <h2 className="mt-4 text-2xl font-bold text-white">
-                {session.user?.name || "Unnamed User"}
-              </h2>
-              <p className="text-sm text-gray-400">{session.user?.email}</p>
-            </div>
-
-            {/* Editable Fields */}
-            <div className="flex flex-col gap-6 items-center">
-              {/* Username - always editable */}
-              <StyledInput
-                label="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username"
-                disabled={!isEditing} // always editable
+    <div className="w-full flex justify-center mt-12">
+      {session ? (
+        <div className="w-full max-w-2xl bg-black border border-slate-600 rounded-2xl shadow-2xl p-8 hover:shadow-purple-500/40">
+          {/* Profile Header */}
+          <div className="flex flex-col items-center mb-8 pb-8 border-b border-slate-700">
+            <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-purple-500 shadow-lg">
+              <Image
+                src={image ? image : session.user.image!}
+                alt="User Avatar"
+                width={300}
+                height={300}
+                className="object-cover object-center w-full h-full"
               />
 
-              {/* College */}
-              {isEditing ? (
-                <div className="flex flex-col space-y-1 w-full max-w-md">
-                  <label className="text-sm font-medium text-slate-400">
-                    College / Institution
-                  </label>
-                  <select
-                    value={college}
-                    onChange={(e) => setCollege(e.target.value)}
-                    className="w-full p-3 bg-slate-800 text-white border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  >
-                    <option value="">Choose College</option>
-                    {colleges.map((c) => (
-                      <option key={c.id} value={c.name}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : (
-                <StyledInput
-                  label="College / Institution"
-                  value={college}
-                  onChange={(e) => setCollege(e.target.value)}
-                  placeholder="Select college"
-                  disabled={true}
-                />
-              )}
-
-              {/* Club */}
-              {isEditing ? (
-                <div className="flex flex-col space-y-1 w-full max-w-md">
-                  <label className="text-sm font-medium text-slate-400">
-                    Club / Affiliation
-                  </label>
-                  <select
-                    value={club}
-                    onChange={(e) => setClub(e.target.value)}
-                    className="w-full p-3 bg-slate-800 text-white border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  >
-                    <option value="">Choose Club</option>
-                    {clubs.map((c) => (
-                      <option key={c.id} value={c.name}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : (
-                <StyledInput
-                  label="Club / Affiliation"
-                  value={club}
-                  onChange={(e) => setClub(e.target.value)}
-                  placeholder="Select club"
-                  disabled={true}
-                />
+              {isEditing && (
+                <label
+                  htmlFor="imageUpload"
+                  className="absolute bottom-0 right-0 bg-purple-600 p-2 rounded-full cursor-pointer hover:bg-purple-700"
+                >
+                  <Camera className="text-white w-5 h-5" />
+                  <input
+                    type="file"
+                    id="imageUpload"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </label>
               )}
             </div>
 
-            {/* Actions */}
-            <div className="flex justify-center gap-4 mt-10">
-              {status && (
-                <p className="text-sm text-green-400 self-center">{status}</p>
+            <h2 className="text-2xl font-bold mt-4 text-white">
+              {username || "Unnamed User"}
+            </h2>
+            <p className="text-slate-400 mt-2">{session.user?.email}</p>
+          </div>
+
+          {/* Profile Edit Section */}
+          <div className="space-y-6">
+            {/* Username */}
+            <div>
+              <label className="text-sm text-slate-400">Username</label>
+              <input
+                type="text"
+                value={username}
+                disabled={!isEditing}
+                onChange={(e) => setUsername(e.target.value)}
+                className={`w-full p-3 mt-1 rounded-lg bg-slate-800 text-white border ${
+                  isEditing
+                    ? "border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    : "border-slate-700"
+                }`}
+              />
+            </div>
+
+            {/* College */}
+            <div>
+              <label className="text-sm text-slate-400">College</label>
+              {isEditing ? (
+                <select
+                  value={collegeId}
+                  onChange={(e) => {
+                    setCollegeId(e.target.value);
+                    const selected = colleges.find(
+                      (c) => c.id === e.target.value
+                    );
+                    setCollege(selected?.name || "");
+                  }}
+                  className="w-full p-3 mt-1 bg-slate-800 text-white border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="">Choose College</option>
+                  {colleges.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p className="p-3 mt-1 bg-slate-800 text-white rounded-lg border border-slate-700">
+                  {college || "Not specified"}
+                </p>
               )}
+            </div>
+
+            {/* Club */}
+            <div>
+              <label className="text-sm text-slate-400">Club</label>
+              {isEditing ? (
+                <select
+                  value={clubId}
+                  onChange={(e) => {
+                    setClubId(e.target.value);
+                    const selected = clubs.find(
+                      (c) => c.id === e.target.value
+                    );
+                    setClub(selected?.name || "");
+                  }}
+                  className="w-full p-3 mt-1 bg-slate-800 text-white border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="">Choose Club</option>
+                  {clubs.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p className="p-3 mt-1 bg-slate-800 text-white rounded-lg border border-slate-700">
+                  {club || "Not specified"}
+                </p>
+              )}
+            </div>
+
+            {/* Buttons */}
+            <div className="flex justify-end gap-4 pt-4">
               {isEditing ? (
                 <>
                   <button
-                    onClick={handleCancel}
-                    className="px-6 py-2 border border-red-500 text-red-400 rounded-lg font-semibold hover:bg-red-900/40 transition duration-300 shadow-lg"
+                    onClick={() => setIsEditing(false)}
+                    className="px-6 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600 transition"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSave}
-                    className="px-6 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition duration-300 shadow-xl shadow-purple-500/30"
+                    className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition"
                   >
-                    Save Changes
+                    Save
                   </button>
                 </>
               ) : (
                 <button
-                  onClick={handleEdit}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition duration-300 shadow-xl shadow-purple-500/30"
+                  onClick={() => setIsEditing(true)}
+                  className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition"
                 >
                   Edit Profile
                 </button>
               )}
             </div>
           </div>
-        ) : (
-          <div className="text-center bg-slate-900/50 p-8 rounded-xl shadow-lg border border-slate-600">
-            <p className="text-lg text-yellow-400">
-              Please log in to view and manage your profile.
-            </p>
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <p className="text-white">Please log in to view your profile.</p>
+      )}
     </div>
   );
-};
-
-export default Profile;
+}

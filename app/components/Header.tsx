@@ -33,7 +33,7 @@ const Header = () => {
       if (!imageUrl) return;
     }
     // console.log("Image URL:", imageUrl);
-    await EditUserBio(session?.user.id, username, imageUrl);
+    // await EditUserBio(session?.user.id, username, imageUrl);
     setUsername(username);
     setImage(imageUrl);
     setShowEditModal(false);
@@ -123,7 +123,7 @@ const Header = () => {
         <div className="p-4 text-white">
           <div className="flex flex-col items-center space-y-2">
             <Image
-              src={session?.user?.image || "/default-profile.png"}
+              src={session?.user?.image || ""}
               alt="User"
               width={70}
               height={70}

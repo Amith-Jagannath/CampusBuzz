@@ -211,19 +211,25 @@ export async function AddCommentToPost(
 export async function EditUserBio(
   userId: string | undefined,
   username: string,
-  imageUrl: string | null
+  imageUrl: string | null,
+  collegeId: string | null,
+  clubId: string | null,
 ) {
   if (!userId || !username) return;
+  console.log(userId, username, imageUrl, collegeId, clubId);
 
   const updatedUser = await prisma.user.update({
     where: { id: userId },
     data: {
       username,
       image: imageUrl,
+      collegeId: collegeId || null,
+      clubId: clubId || null,
     },
   });
+  console.log("User bio updated:", updatedUser);
 
-  return updatedUser;
+  // return updatedUser;
 }
 
 export async function WhetherUserBelongsOtherThanClub(
